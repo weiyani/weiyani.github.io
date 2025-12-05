@@ -1,17 +1,9 @@
 name = "anniversary-site"
-type = "javascript"
-account_id = ""
-workers_dev = true
-route = ""
-zone_id = ""
+main = ""
+compatibility_date = "2025-12-05"
 
-[site]
-bucket = "./dist"
-entry-point = "."
-
-[build]
-command = "npm run build"
-watch_dir = "."
+[assets]
+directory = "./dist"
 
 [vars]
 NODE_VERSION = "20"
