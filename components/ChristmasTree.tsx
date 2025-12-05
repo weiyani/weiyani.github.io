@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
-import { Decoration, DecorationType } from '../types';
+import { Decoration, DecorationType, BookColor } from '../types';
+import { Book, Image, Mail, Gamepad2, CheckCircle2 } from 'lucide-react';
 
 interface TreeProps {
   onInteraction: (type: 'photo' | 'music' | 'letter' | 'game') => void;
 }
 
+// 爱之书配置：每种颜色对应固定功能
+const BOOK_CONFIG = [
+  { color: 'red' as BookColor, emoji: '📕', action: 'letter' as const, name: '红色爱之书', description: '哈基姆的信' },
+  { color: 'blue' as BookColor, emoji: '📘', action: 'photo' as const, name: '蓝色爱之书', description: '幸福瞬间' },
+  { color: 'green' as BookColor, emoji: '📗', action: 'game' as const, name: '绿色爱之书', description: '冒险游戏' },
+  { color: 'purple' as BookColor, emoji: '📙', action: 'music' as const, name: '橙色爱之书', description: '音乐播放' },
+];
+
 const ChristmasTree: React.FC<TreeProps> = ({ onInteraction }) => {
   const [decorations, setDecorations] = useState<Decoration[]>([]);
+  const [foundBooks, setFoundBooks] = useState<Set<BookColor>>(new Set());
   // Use local tree.png from public folder
   const [treeImg, setTreeImg] = useState("/tree.png");
   const [imgError, setImgError] = useState(false);
@@ -26,31 +36,112 @@ const emojis = [
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // 20% chance for interactive "Book of Love" (Hakim)
-    const isInteractive = Math.random() < 0.2; 
+    // 20% 几率生成爱之书
+    const isInteractive = Math.random() < 0.2;
     
-    const newDecoration: Decoration = {
-      id: Date.now().toString(),
-      x, 
-      y,
-      type: isInteractive ? DecorationType.INTERACTIVE : DecorationType.NORMAL,
-      emoji: isInteractive ? '📕' : emojis[Math.floor(Math.random() * emojis.length)]
-    };
+    let newDecoration: Decoration;
+    
+    if (isInteractive) {
+      // 随机选择一个还没找到的书
+      const unfoundBooks = BOOK_CONFIG.filter(book => !foundBooks.has(book.color));
+      
+      if (unfoundBooks.length > 0) {
+        const selectedBook = unfoundBooks[Math.floor(Math.random() * unfoundBooks.length)];
+        newDecoration = {
+          id: Date.now().toString(),
+          x,
+          y,
+          type: DecorationType.INTERACTIVE,
+          emoji: selectedBook.emoji,
+          bookColor: selectedBook.color,
+          action: selectedBook.action
+        };
+      } else {
+        // 所有书都找到了，生成普通装饰
+        newDecoration = {
+          id: Date.now().toString(),
+          x,
+          y,
+          type: DecorationType.NORMAL,
+          emoji: emojis[Math.floor(Math.random() * emojis.length)]
+        };
+      }
+    } else {
+      // 普通装饰
+      newDecoration = {
+        id: Date.now().toString(),
+        x,
+        y,
+        type: DecorationType.NORMAL,
+        emoji: emojis[Math.floor(Math.random() * emojis.length)]
+      };
+    }
 
     setDecorations(prev => [...prev, newDecoration]);
   };
 
   const handleDecorationClick = (e: React.MouseEvent, decoration: Decoration) => {
-    e.stopPropagation(); 
-    if (decoration.type === DecorationType.INTERACTIVE) {
-      const actions: ('photo' | 'music' | 'letter' | 'game')[] = ['photo', 'letter', 'game'];
-      const action = actions[Math.floor(Math.random() * actions.length)];
-      onInteraction(action);
+    e.stopPropagation();
+    if (decoration.type === DecorationType.INTERACTIVE && decoration.action && decoration.bookColor) {
+      // 标记为已找到
+      setFoundBooks(prev => new Set(prev).add(decoration.bookColor!));
+      // 触发对应动作
+      onInteraction(decoration.action);
+      // 移除该装饰（书被打开后消失）
+      setDecorations(prev => prev.filter(d => d.id !== decoration.id));
     }
   };
 
   return (
-    <div className="relative w-64 h-[320px] md:w-[500px] md:h-[600px] mx-auto mt-auto cursor-pointer group select-none flex items-end justify-center" onClick={handleTreeClick}>
+    <div className="relative w-full">
+      {/* 待寻找的爱之书列表 */}
+      <div className="mb-4 md:mb-6 bg-white/70 backdrop-blur-sm rounded-2xl p-3 md:p-4 border-2 border-game-yellow shadow-lg max-w-2xl mx-auto">
+        <h3 className="text-sm md:text-lg font-chinese font-bold text-game-blue text-center mb-2 md:mb-3 flex items-center justify-center gap-2">
+          <Book className="w-4 h-4 md:w-5 md:h-5" />
+          待寻找的爱之书 ({foundBooks.size}/{BOOK_CONFIG.length})
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+          {BOOK_CONFIG.map(book => {
+            const isFound = foundBooks.has(book.color);
+            const Icon = book.action === 'photo' ? Image : book.action === 'letter' ? Mail : book.action === 'game' ? Gamepad2 : Book;
+            
+            return (
+              <div
+                key={book.color}
+                className={`relative flex flex-col items-center p-2 md:p-3 rounded-xl border-2 transition-all ${
+                  isFound
+                    ? 'bg-green-100 border-green-400 opacity-60'
+                    : 'bg-white border-game-orange hover:scale-105 animate-pulse'
+                }`}
+              >
+                {isFound && (
+                  <CheckCircle2 className="absolute -top-1 -right-1 w-4 h-4 md:w-5 md:h-5 text-green-600 fill-green-100" />
+                )}
+                <span className="text-2xl md:text-3xl mb-1">{book.emoji}</span>
+                <span className="text-xs md:text-sm font-chinese font-bold text-gray-700 text-center">
+                  {book.name}
+                </span>
+                <div className="flex items-center gap-1 mt-1">
+                  <Icon className="w-3 h-3 md:w-4 md:h-4 text-gray-500" />
+                  <span className="text-[10px] md:text-xs text-gray-500">{book.description}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {foundBooks.size === BOOK_CONFIG.length && (
+          <div className="mt-3 text-center text-sm md:text-base font-chinese font-bold text-game-orange animate-bounce">
+            🎉 所有爱之书已集齐！
+          </div>
+        )}
+      </div>
+
+      {/* 圣诞树 */}
+      <div className="relative w-64 h-[320px] md:w-[500px] md:h-[600px] mx-auto mt-auto cursor-pointer group select-none flex items-end justify-center" onClick={handleTreeClick}>
+        {/* Tooltip hint */}
+        <div className="absolute -top-8 md:-top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-game-orange text-white px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border-2 border-white shadow-xl whitespace-nowrap z-30 pointer-events-none font-display transform rotate-1 text-xs md:text-base">
+          点击大树寻找爱之书! 📕
+        </div>
 
       <img 
         src={treeImg}
@@ -71,13 +162,18 @@ const emojis = [
       {decorations.map(dec => (
         <div
           key={dec.id}
-          className={`absolute text-xl md:text-4xl select-none transition-transform hover:scale-125 ${dec.type === DecorationType.INTERACTIVE ? 'animate-bounce cursor-pointer z-20 drop-shadow-[0_0_10px_rgba(255,255,0,0.8)]' : 'drop-shadow-md'}`}
+          className={`absolute text-xl md:text-4xl select-none transition-transform hover:scale-125 ${
+            dec.type === DecorationType.INTERACTIVE
+              ? 'animate-bounce cursor-pointer z-20 drop-shadow-[0_0_15px_rgba(255,215,0,0.9)]'
+              : 'drop-shadow-md'
+          }`}
           style={{ left: dec.x - 15, top: dec.y - 15 }}
           onClick={(e) => handleDecorationClick(e, dec)}
         >
           {dec.emoji}
         </div>
       ))}
+      </div>
     </div>
   );
 };
