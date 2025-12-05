@@ -1,0 +1,135 @@
+import React, { useState } from 'react';
+import SnowBackground from './components/SnowBackground';
+import Countdown from './components/Countdown';
+import ChristmasTree from './components/ChristmasTree';
+import MusicPlayer from './components/MusicPlayer';
+import MiniGame from './components/MiniGame';
+import Fireworks from './components/Fireworks';
+import { PHOTOS, LOVE_LETTER } from './constants';
+import { X, ChevronLeft, ChevronRight, Gamepad, Heart } from 'lucide-react';
+
+// Simple Modals
+const Modal: React.FC<{ onClose: () => void; children: React.ReactNode; title?: string }> = ({ onClose, children, title }) => (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-300">
+    <div className="bg-white rounded-[2rem] p-8 max-w-lg w-full relative shadow-2xl border-8 border-game-yellow transform rotate-1">
+      <button onClick={onClose} className="absolute -top-6 -right-6 bg-game-orange text-white rounded-full p-2 hover:bg-red-500 transition-colors shadow-lg border-4 border-white">
+        <X size={28} strokeWidth={3} />
+      </button>
+      {title && <h2 className="text-3xl font-chinese text-game-blue text-center mb-6 border-b-4 border-dotted border-gray-200 pb-2 font-bold">{title}</h2>}
+      {children}
+    </div>
+  </div>
+);
+
+const PhotoCarousel = () => {
+  const [idx, setIdx] = useState(0);
+  const next = () => setIdx((prev) => (prev + 1) % PHOTOS.length);
+  const prev = () => setIdx((prev) => (prev - 1 + PHOTOS.length) % PHOTOS.length);
+
+  return (
+    <div className="relative aspect-video bg-gray-900 rounded-xl overflow-hidden shadow-xl group border-4 border-white">
+      <img src={PHOTOS[idx]} alt="Memory" className="w-full h-full object-cover" />
+      <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/20 p-3 rounded-full text-white backdrop-blur-md border-2 border-white/50 hover:bg-game-blue hover:border-game-blue transition-all"><ChevronLeft strokeWidth={3} /></button>
+      <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/20 p-3 rounded-full text-white backdrop-blur-md border-2 border-white/50 hover:bg-game-blue hover:border-game-blue transition-all"><ChevronRight strokeWidth={3} /></button>
+      
+      {/* Photo frame effect */}
+      <div className="absolute inset-0 border-[10px] border-white/10 pointer-events-none rounded-xl"></div>
+    </div>
+  );
+};
+
+const App: React.FC = () => {
+  const [activeModal, setActiveModal] = useState<'photo' | 'letter' | 'game' | null>(null);
+  const [showFireworks, setShowFireworks] = useState(false);
+
+  const handleTreeInteraction = (type: 'photo' | 'music' | 'letter' | 'game') => {
+    if (type === 'music') {
+        setActiveModal('letter');
+    } else {
+        setActiveModal(type);
+    }
+  };
+
+  return (
+    <div className="relative min-h-screen flex flex-col overflow-hidden font-sans text-gray-800 selection:bg-game-yellow selection:text-black">
+      <SnowBackground />
+      <MusicPlayer />
+      <Fireworks active={showFireworks} onClose={() => setShowFireworks(false)} />
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center relative z-10 w-full max-w-7xl mx-auto pt-10 px-4">
+        
+        {/* Game Style Header */}
+        <header className="text-center mb-10 animate-fade-in-down select-none relative group transform hover:scale-105 transition duration-500">
+           {/* Decorative elements behind title */}
+           <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-full h-32 bg-white/30 blur-3xl rounded-full -z-10"></div>
+           
+           <div className="flex flex-col items-center">
+              <div className="bg-game-orange text-white px-4 py-1 rounded shadow-md transform -rotate-3 mb-2 font-chinese text-sm md:text-base tracking-widest border-2 border-white">
+                  🎄 圣诞快乐 & 结婚纪念日 💍
+              </div>
+              
+              {/* It Takes Two Logo Style */}
+              <h1 className="text-5xl md:text-7xl font-logo text-game-yellow drop-shadow-[4px_4px_0_#D35400] stroke-text relative z-10 leading-tight">
+                我们的 <br/>
+                <span className="text-game-orange drop-shadow-[4px_4px_0_#C0392B]">双人成行</span>
+              </h1>
+              
+              <div className="mt-4 flex items-center gap-3 bg-white/60 backdrop-blur px-6 py-2 rounded-full border-2 border-white shadow-sm">
+                 <Gamepad className="text-game-blue" />
+                 <p className="text-lg md:text-xl font-chinese font-bold text-gray-600">
+                   五周年 · 爱的冒险篇
+                 </p>
+                 <Heart className="text-red-500 fill-red-500 animate-pulse" size={20} />
+              </div>
+           </div>
+        </header>
+
+        <Countdown />
+
+        <div className="flex-1 flex items-end justify-center w-full mt-8 md:mt-0 relative">
+          <ChristmasTree onInteraction={handleTreeInteraction} />
+          
+          {/* Decorative floor/ground to ground the tree */}
+          <div className="absolute bottom-0 w-full h-12 bg-gradient-to-t from-white/40 to-transparent blur-xl -z-10 rounded-full"></div>
+        </div>
+        
+        <div className="pb-6 text-center text-gray-600/80 text-sm font-chinese tracking-wide animate-pulse">
+          <span className="bg-white/50 px-3 py-1 rounded-full border border-white/50">
+            💡 提示: 点击大树寻找隐藏的 《爱之书》 📕
+          </span>
+        </div>
+      </main>
+
+      {/* Modals */}
+      {activeModal === 'photo' && (
+        <Modal onClose={() => setActiveModal(null)} title="幸福瞬间 (照片墙)">
+          <PhotoCarousel />
+        </Modal>
+      )}
+
+      {activeModal === 'letter' && (
+        <Modal onClose={() => setActiveModal(null)} title="来自哈基姆博士的信">
+          <div className="font-chinese text-lg text-gray-700 whitespace-pre-line leading-relaxed p-6 bg-[#FFF8E1] rounded-xl border-l-4 border-game-book shadow-inner relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+               <Gamepad size={100} />
+            </div>
+            {LOVE_LETTER}
+          </div>
+        </Modal>
+      )}
+
+      {activeModal === 'game' && (
+        <MiniGame 
+          onClose={() => setActiveModal(null)} 
+          onWin={() => {
+            setActiveModal(null);
+            setShowFireworks(true);
+          }} 
+        />
+      )}
+    </div>
+  );
+};
+
+export default App;
