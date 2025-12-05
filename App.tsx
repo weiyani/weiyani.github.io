@@ -55,8 +55,10 @@ const App: React.FC = () => {
   const [showFireworks, setShowFireworks] = useState(false);
 
   const handleTreeInteraction = (type: 'photo' | 'music' | 'letter' | 'game') => {
+    // 当点击音乐书时，直接播放音乐（音乐播放器始终在页面上）
     if (type === 'music') {
-        setActiveModal('letter');
+        // 可以在这里添加音乐播放的特殊逻辑，比如确保音乐正在播放
+        console.log('Playing music from love book');
     } else {
         setActiveModal(type);
     }
