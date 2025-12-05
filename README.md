@@ -52,6 +52,17 @@ npm run preview
 
 2. 推送代码到 master 分支，GitHub Actions 会自动部署到 CloudBase。
 
+### Cloudflare Pages 部署
+
+1. 访问 [Cloudflare Pages Dashboard](https://dash.cloudflare.com/?account-pages=%7B%22id%22:%22new%22%7D)
+2. 连接你的 GitHub 账户并选择此仓库
+3. 配置构建设置：
+   - Production branch: `master`
+   - Framework preset: `Vite`
+   - Build command: `npm run build`
+   - Build output directory: `dist`
+4. 点击 "Save and Deploy"
+
 详细部署说明请查看 [DEPLOYMENT.md](./DEPLOYMENT.md) 文件。
 
 ## 项目结构
