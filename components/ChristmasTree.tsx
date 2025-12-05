@@ -12,8 +12,15 @@ const ChristmasTree: React.FC<TreeProps> = ({ onInteraction }) => {
   const [imgError, setImgError] = useState(false);
 
   // Game specific items: Hammer (Cody), Wrench (May), Yarn (Rose's Room), Book (Hakim), Bee (Tree level), Snowglobe, etc.
-  const emojis = ['🔨', '🔧', '🧶', '📖', '🐝', '🐿️', '🐘', '⏰', '🎮', '💡', '🌱'];
-
+const emojis = [
+  '🔔',  // 铃铛
+  '🎀',  // 蝴蝶结
+  '🎁',  // 礼物
+  '🧦',  // 圣诞袜
+  '🦌',  // 驯鹿
+  '⛄',  // 雪人
+  '❄️',  // 雪花
+];
   const handleTreeClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -44,10 +51,6 @@ const ChristmasTree: React.FC<TreeProps> = ({ onInteraction }) => {
 
   return (
     <div className="relative w-64 h-[320px] md:w-[500px] md:h-[600px] mx-auto mt-auto cursor-pointer group select-none flex items-end justify-center" onClick={handleTreeClick}>
-      {/* Tooltip hint style updated to game theme */}
-      <div className="absolute -top-8 md:-top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-game-orange text-white px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border-2 border-white shadow-xl whitespace-nowrap z-30 pointer-events-none font-display transform rotate-1 text-xs md:text-base">
-        点击大树寻找爱之书! 📕
-      </div>
 
       <img 
         src={treeImg}

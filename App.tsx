@@ -108,7 +108,7 @@ const App: React.FC = () => {
         
         <div className="pb-4 md:pb-6 text-center text-gray-600/80 text-xs md:text-sm font-chinese tracking-wide animate-pulse px-2">
           <span className="bg-white/50 px-2 md:px-3 py-1 rounded-full border border-white/50 inline-block">
-            💡 提示: 点击大树寻找隐藏的 《爱之书》 📕
+            💡 点击装扮圣诞树，随机掉落惊喜爱之书! 📕
           </span>
         </div>
       </main>
