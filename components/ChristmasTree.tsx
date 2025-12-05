@@ -43,9 +43,9 @@ const ChristmasTree: React.FC<TreeProps> = ({ onInteraction }) => {
   };
 
   return (
-    <div className="relative w-80 h-[400px] md:w-[500px] md:h-[600px] mx-auto mt-auto cursor-pointer group select-none flex items-end justify-center" onClick={handleTreeClick}>
+    <div className="relative w-64 h-[320px] md:w-[500px] md:h-[600px] mx-auto mt-auto cursor-pointer group select-none flex items-end justify-center" onClick={handleTreeClick}>
       {/* Tooltip hint style updated to game theme */}
-      <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-game-orange text-white px-4 py-2 rounded-xl border-2 border-white shadow-xl whitespace-nowrap z-30 pointer-events-none font-display transform rotate-1">
+      <div className="absolute -top-8 md:-top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-game-orange text-white px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border-2 border-white shadow-xl whitespace-nowrap z-30 pointer-events-none font-display transform rotate-1 text-xs md:text-base">
         点击大树寻找爱之书! 📕
       </div>
 
@@ -68,8 +68,8 @@ const ChristmasTree: React.FC<TreeProps> = ({ onInteraction }) => {
       {decorations.map(dec => (
         <div
           key={dec.id}
-          className={`absolute text-2xl md:text-4xl select-none transition-transform hover:scale-125 ${dec.type === DecorationType.INTERACTIVE ? 'animate-bounce cursor-pointer z-20 drop-shadow-[0_0_10px_rgba(255,255,0,0.8)]' : 'drop-shadow-md'}`}
-          style={{ left: dec.x - 20, top: dec.y - 20 }}
+          className={`absolute text-xl md:text-4xl select-none transition-transform hover:scale-125 ${dec.type === DecorationType.INTERACTIVE ? 'animate-bounce cursor-pointer z-20 drop-shadow-[0_0_10px_rgba(255,255,0,0.8)]' : 'drop-shadow-md'}`}
+          style={{ left: dec.x - 15, top: dec.y - 15 }}
           onClick={(e) => handleDecorationClick(e, dec)}
         >
           {dec.emoji}

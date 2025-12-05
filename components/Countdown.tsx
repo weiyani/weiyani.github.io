@@ -71,19 +71,25 @@ const Countdown: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 bg-white/80 backdrop-blur-md rounded-3xl border-4 border-game-yellow shadow-[0_10px_0_rgba(0,0,0,0.1)] max-w-3xl mx-auto mt-10 z-10 relative transform -rotate-1 transition hover:rotate-0 duration-300">
+    <div className="flex flex-col items-center justify-center p-3 md:p-6 bg-white/80 backdrop-blur-md rounded-2xl md:rounded-3xl border-2 md:border-4 border-game-yellow shadow-[0_5px_0_rgba(0,0,0,0.1)] md:shadow-[0_10px_0_rgba(0,0,0,0.1)] max-w-3xl mx-auto mt-4 md:mt-10 z-10 relative transform md:-rotate-1 transition hover:rotate-0 duration-300">
       {/* HUD Header */}
-      <div className="absolute -top-6 bg-game-orange text-white px-8 py-2 rounded-full font-chinese text-xl md:text-2xl border-2 border-white shadow-lg tracking-widest flex items-center gap-2">
-         <Star fill="white" size={20} /> 当前任务：庆祝 {anniversaryYear} 周年 <Star fill="white" size={20} />
+      <div className="absolute -top-4 md:-top-6 bg-game-orange text-white px-4 md:px-8 py-1 md:py-2 rounded-full font-chinese text-sm md:text-2xl border-2 border-white shadow-lg tracking-wide md:tracking-widest flex items-center gap-1 md:gap-2">
+         <Star fill="white" size={16} className="md:hidden" />
+         <Star fill="white" size={20} className="hidden md:block" /> 
+         <span className="whitespace-nowrap">当前任务:庆祝 {anniversaryYear} 周年</span>
+         <Star fill="white" size={16} className="md:hidden" />
+         <Star fill="white" size={20} className="hidden md:block" />
       </div>
 
-      <div className="flex items-center gap-2 mb-6 mt-4">
-        <h2 className="text-xl md:text-3xl font-chinese text-gray-700 text-center flex items-center gap-2">
-           <Heart className="text-red-500 fill-red-500 animate-pulse" /> 周年倒计时 <Heart className="text-red-500 fill-red-500 animate-pulse" />
+      <div className="flex items-center gap-1 md:gap-2 mb-3 md:mb-6 mt-3 md:mt-4">
+        <h2 className="text-base md:text-3xl font-chinese text-gray-700 text-center flex items-center gap-1 md:gap-2">
+           <Heart className="text-red-500 fill-red-500 animate-pulse w-4 h-4 md:w-6 md:h-6" /> 
+           <span>周年倒计时</span>
+           <Heart className="text-red-500 fill-red-500 animate-pulse w-4 h-4 md:w-6 md:h-6" />
         </h2>
       </div>
       
-      <div className="grid grid-cols-4 gap-2 md:gap-6 w-full">
+      <div className="grid grid-cols-4 gap-1.5 md:gap-6 w-full">
         <TimeUnit value={timeLeft.days} label="天" color="bg-game-blue" />
         <TimeUnit value={timeLeft.hours} label="时" color="bg-game-green" />
         <TimeUnit value={timeLeft.minutes} label="分" color="bg-game-yellow" />
@@ -95,11 +101,11 @@ const Countdown: React.FC = () => {
 };
 
 const TimeUnit: React.FC<{ value: number; label: string; color: string }> = ({ value, label, color }) => (
-  <div className={`flex flex-col items-center ${color} p-2 md:p-4 rounded-xl shadow-lg border-b-4 border-black/20 text-white transform transition hover:scale-105`}>
-    <span className="text-3xl md:text-6xl font-logo font-bold tabular-nums drop-shadow-md">
+  <div className={`flex flex-col items-center ${color} p-1.5 md:p-4 rounded-lg md:rounded-xl shadow-lg border-b-2 md:border-b-4 border-black/20 text-white transform transition hover:scale-105`}>
+    <span className="text-2xl md:text-6xl font-logo font-bold tabular-nums drop-shadow-md leading-none">
       {value.toString().padStart(2, '0')}
     </span>
-    <span className="text-white font-chinese font-bold text-sm md:text-lg mt-1 tracking-wider">{label}</span>
+    <span className="text-white font-chinese font-bold text-xs md:text-lg mt-0.5 md:mt-1 tracking-wider">{label}</span>
   </div>
 );
 

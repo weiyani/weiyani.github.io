@@ -207,41 +207,44 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
   }, [gameState, onWin]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md">
-      <div className="bg-white border-8 border-game-orange rounded-3xl p-6 w-full max-w-4xl relative shadow-[0_0_0_10px_#FFBF00] transform rotate-1">
-        <button onClick={onClose} className="absolute top-2 right-4 text-gray-400 hover:text-red-500 text-3xl font-display">✕</button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-2 md:p-4">
+      <div className="bg-white border-4 md:border-8 border-game-orange rounded-2xl md:rounded-3xl p-3 md:p-6 w-full max-w-4xl relative shadow-[0_0_0_5px_#FFBF00] md:shadow-[0_0_0_10px_#FFBF00] transform md:rotate-1">
+        <button onClick={onClose} className="absolute top-1 right-2 md:top-2 md:right-4 text-gray-400 hover:text-red-500 text-2xl md:text-3xl font-display z-10">✕</button>
         
-        <div className="flex justify-between items-center mb-6 px-4 text-gray-800">
-          <h2 className="text-3xl md:text-4xl font-logo text-game-blue drop-shadow-sm transform -rotate-2">双人成行大冒险</h2>
-          <div className="flex items-center gap-2 text-2xl font-bold text-game-book bg-yellow-100 px-6 py-2 rounded-full border-2 border-game-orange">
-            <BookOpen className="text-game-book" /> {score} / {WIN_SCORE}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 md:mb-6 px-2 md:px-4 text-gray-800 gap-2">
+          <h2 className="text-xl md:text-4xl font-logo text-game-blue drop-shadow-sm transform md:-rotate-2">双人成行大冒险</h2>
+          <div className="flex items-center gap-1 md:gap-2 text-lg md:text-2xl font-bold text-game-book bg-yellow-100 px-3 md:px-6 py-1 md:py-2 rounded-full border-2 border-game-orange">
+            <BookOpen className="text-game-book w-4 h-4 md:w-6 md:h-6" /> {score} / {WIN_SCORE}
           </div>
         </div>
 
-        <canvas ref={canvasRef} className="w-full bg-slate-100 rounded-xl shadow-inner cursor-pointer border-4 border-slate-200" />
+        <canvas ref={canvasRef} className="w-full bg-slate-100 rounded-lg md:rounded-xl shadow-inner cursor-pointer border-2 md:border-4 border-slate-200" />
 
-        <div className="mt-6 text-center font-display">
+        <div className="mt-3 md:mt-6 text-center font-display">
             {gameState === GameState.IDLE && (
-                <p className="text-2xl animate-bounce text-game-orange tracking-wider">点击开始：为了爱而奔跑!</p>
+                <p className="text-lg md:text-2xl animate-bounce text-game-orange tracking-wider">点击开始：为了爱而奔跑!</p>
             )}
             {gameState === GameState.GAME_OVER && (
                 <div className="flex flex-col items-center gap-2">
-                    <p className="text-3xl text-gray-700">哎呀! 需要合作!</p>
+                    <p className="text-2xl md:text-3xl text-gray-700">哎呀! 需要合作!</p>
                     <button 
                         onClick={initGame}
-                        className="px-8 py-3 bg-game-green text-white rounded-full text-xl hover:scale-110 transition shadow-lg border-b-4 border-teal-600"
+                        className="px-6 md:px-8 py-2 md:py-3 bg-game-green text-white rounded-full text-lg md:text-xl hover:scale-110 transition shadow-lg border-b-4 border-teal-600 active:scale-95"
                     >
                         重新挑战
                     </button>
                 </div>
             )}
             {gameState === GameState.WON && (
-                <div className="text-4xl text-game-orange font-bold flex items-center justify-center gap-2 animate-pulse">
-                    <Trophy className="text-yellow-500 w-12 h-12" /> 修复成功! 爱意满满!
+                <div className="text-2xl md:text-4xl text-game-orange font-bold flex items-center justify-center gap-2 animate-pulse">
+                    <Trophy className="text-yellow-500 w-8 h-8 md:w-12 md:h-12" /> 修复成功! 爱意满满!
                 </div>
             )}
             {gameState === GameState.PLAYING && (
-                <p className="text-lg text-gray-400 font-sans font-bold">按空格键跳跃</p>
+                <p className="text-sm md:text-lg text-gray-400 font-sans font-bold">
+                  <span className="hidden md:inline">按空格键跳跃</span>
+                  <span className="md:hidden">点击屏幕跳跃</span>
+                </p>
             )}
         </div>
       </div>

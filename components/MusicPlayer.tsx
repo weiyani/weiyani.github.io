@@ -82,8 +82,8 @@ const MusicPlayer: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50 flex flex-col items-end gap-2">
-      <div className="bg-white/90 backdrop-blur-md p-2 pl-4 pr-2 rounded-full shadow-lg border border-white flex items-center gap-3 transition-all hover:shadow-xl group">
+    <div className="fixed top-2 md:top-4 right-2 md:right-4 z-50 flex flex-col items-end gap-2">
+      <div className="bg-white/90 backdrop-blur-md p-1.5 md:p-2 pl-3 md:pl-4 pr-1.5 md:pr-2 rounded-full shadow-lg border border-white flex items-center gap-2 md:gap-3 transition-all hover:shadow-xl group">
         <audio 
           ref={audioRef} 
           src={songs[0].url} 
@@ -96,8 +96,9 @@ const MusicPlayer: React.FC = () => {
         
         <div className="relative">
           <div className={`absolute inset-0 bg-christmas-red rounded-full opacity-20 ${isPlaying ? 'animate-ping' : ''}`}></div>
-          <div className={`bg-christmas-red p-2 rounded-full relative z-10 ${isPlaying ? 'animate-spin-slow' : ''}`}>
-             <Disc size={20} className="text-white" />
+          <div className={`bg-christmas-red p-1.5 md:p-2 rounded-full relative z-10 ${isPlaying ? 'animate-spin-slow' : ''}`}>
+             <Disc size={16} className="text-white md:hidden" />
+             <Disc size={20} className="text-white hidden md:block" />
           </div>
         </div>
 
@@ -108,16 +109,17 @@ const MusicPlayer: React.FC = () => {
 
         <button 
           onClick={togglePlay}
-          className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-700"
+          className="p-1.5 md:p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-700 active:scale-95"
         >
-          {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+          {isPlaying ? <Pause size={16} className="md:hidden" /> : <Play size={16} className="md:hidden" />}
+          {isPlaying ? <Pause size={20} className="hidden md:block" /> : <Play size={20} className="hidden md:block" />}
         </button>
       </div>
 
-      {/* Lyric Display Bubble */}
+      {/* Lyric Display Bubble - 移动端优化 */}
       {currentLyric && isPlaying && (
-        <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-xl shadow-md border border-christmas-blue/30 max-w-xs md:max-w-md animate-fade-in transition-all duration-300">
-           <p className="text-christmas-green font-chinese text-center text-sm md:text-base font-medium leading-relaxed">
+        <div className="bg-white/80 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2 rounded-xl shadow-md border border-christmas-blue/30 max-w-[280px] md:max-w-md animate-fade-in transition-all duration-300">
+           <p className="text-christmas-green font-chinese text-center text-xs md:text-base font-medium leading-relaxed">
              ♪ {currentLyric} ♪
            </p>
         </div>

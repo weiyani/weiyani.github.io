@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="https://lucide.dev/icons/heart-handshake.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="theme-color" content="#fbc2eb" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>我们的双人成行 - 5周年纪念</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,10 +60,14 @@
         color: #2D3436;
         overflow-x: hidden;
         min-height: 100vh;
+        /* 移动端优化 */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        touch-action: manipulation;
       }
       /* Custom scrollbar */
       ::-webkit-scrollbar {
-        width: 10px;
+        width: 8px;
       }
       ::-webkit-scrollbar-track {
         background: #fbc2eb;
@@ -69,6 +76,10 @@
         background: #FF9F1C;
         border-radius: 5px;
         border: 2px solid #fff;
+      }
+      /* 移动端点击高亮去除 */
+      * {
+        -webkit-tap-highlight-color: transparent;
       }
     </style>
   <script type="importmap">
