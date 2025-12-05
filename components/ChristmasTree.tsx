@@ -8,10 +8,10 @@ interface TreeProps {
 
 // 爱之书配置：每种颜色对应固定功能
 const BOOK_CONFIG = [
-  { color: 'red' as BookColor, emoji: '📕', action: 'letter' as const, name: '红色爱之书', description: '哈基姆的信' },
-  { color: 'blue' as BookColor, emoji: '📘', action: 'photo' as const, name: '蓝色爱之书', description: '幸福瞬间' },
-  { color: 'green' as BookColor, emoji: '📗', action: 'game' as const, name: '绿色爱之书', description: '冒险游戏' },
-  { color: 'purple' as BookColor, emoji: '📙', action: 'music' as const, name: '橙色爱之书', description: '音乐播放' },
+  { color: 'red' as BookColor, emoji: '📕', action: 'letter' as const, name: '红色爱之书' },
+  { color: 'blue' as BookColor, emoji: '📘', action: 'photo' as const, name: '蓝色爱之书' },
+  { color: 'green' as BookColor, emoji: '📗', action: 'game' as const, name: '绿色爱之书' },
+  { color: 'purple' as BookColor, emoji: '📙', action: 'music' as const, name: '紫色爱之书' },
 ];
 
 const ChristmasTree: React.FC<TreeProps> = ({ onInteraction }) => {
@@ -103,7 +103,6 @@ const emojis = [
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
           {BOOK_CONFIG.map(book => {
             const isFound = foundBooks.has(book.color);
-            const Icon = book.action === 'photo' ? Image : book.action === 'letter' ? Mail : book.action === 'game' ? Gamepad2 : Book;
             
             return (
               <div
@@ -111,7 +110,7 @@ const emojis = [
                 className={`relative flex flex-col items-center p-2 md:p-3 rounded-xl border-2 transition-all ${
                   isFound
                     ? 'bg-green-100 border-green-400 opacity-60'
-                    : 'bg-white border-game-orange hover:scale-105 animate-pulse'
+                    : 'bg-white border-game-orange hover:scale-105'
                 }`}
               >
                 {isFound && (
@@ -121,13 +120,13 @@ const emojis = [
                 <span className="text-xs md:text-sm font-chinese font-bold text-gray-700 text-center">
                   {book.name}
                 </span>
-                <div className="flex items-center gap-1 mt-1">
-                  <Icon className="w-3 h-3 md:w-4 md:h-4 text-gray-500" />
-                  <span className="text-[10px] md:text-xs text-gray-500">{book.description}</span>
-                </div>
               </div>
             );
           })}
+        </div>
+        {/* 功能说明 */}
+        <div className="mt-3 text-center text-xs md:text-sm text-gray-600 font-chinese">
+          💡 点击装扮圣诞树，随机掉落惊喜爱之书! 📕
         </div>
         {foundBooks.size === BOOK_CONFIG.length && (
           <div className="mt-3 text-center text-sm md:text-base font-chinese font-bold text-game-orange animate-bounce">
@@ -138,10 +137,6 @@ const emojis = [
 
       {/* 圣诞树 */}
       <div className="relative w-64 h-[320px] md:w-[500px] md:h-[600px] mx-auto mt-auto cursor-pointer group select-none flex items-end justify-center" onClick={handleTreeClick}>
-        {/* Tooltip hint */}
-        <div className="absolute -top-8 md:-top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-game-orange text-white px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border-2 border-white shadow-xl whitespace-nowrap z-30 pointer-events-none font-display transform rotate-1 text-xs md:text-base">
-          点击大树寻找爱之书! 📕
-        </div>
 
       <img 
         src={treeImg}
