@@ -5,6 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="https://lucide.dev/icons/heart-handshake.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>我们的双人成行 - 5周年纪念</title>
+    <!-- Keep Tailwind CDN for simplicity in this setup, though Vite can handle it too -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,21 +15,21 @@
         theme: {
           extend: {
             fontFamily: {
-              logo: ['"Carter One"', 'cursive'], // Cartoonish bold font for headers
+              logo: ['"Carter One"', 'cursive'],
               display: ['"Fredoka One"', 'cursive'],
               chinese: ['"Noto Serif SC"', 'serif'],
               sans: ['"Nunito"', 'sans-serif'],
             },
             colors: {
               game: {
-                orange: '#FF9F1C', // Logo orange
-                yellow: '#FFBF00', // Logo yellow
-                blue: '#2EC4B6',   // Sky/May blue
-                green: '#4CC9F0',  // Magic blue/green
-                cody: '#70C1B3',   // Cody green/teal
-                may: '#5F5AA2',    // May purple/blue
-                book: '#E71D36',   // Dr. Hakim Red
-                pink: '#FF99C8',   // Added Pink for warmth
+                orange: '#FF9F1C', 
+                yellow: '#FFBF00', 
+                blue: '#2EC4B6',   
+                green: '#4CC9F0',  
+                cody: '#70C1B3',   
+                may: '#5F5AA2',    
+                book: '#E71D36',   
+                pink: '#FF99C8',   
               },
               christmas: {
                 red: '#D42426',
@@ -52,13 +53,11 @@
     </script>
     <style>
       body {
-        /* Warmer Gradient: Pink to Soft Blue (Magic Hour / Sunset feel) */
         background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
         color: #2D3436;
         overflow-x: hidden;
         min-height: 100vh;
       }
-      /* Custom scrollbar */
       ::-webkit-scrollbar {
         width: 10px;
       }
@@ -71,20 +70,21 @@
         border: 2px solid #fff;
       }
     </style>
-  <script type="importmap">
+<script type="importmap">
 {
   "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1",
+    "vite": "https://aistudiocdn.com/vite@^7.2.6",
     "react": "https://aistudiocdn.com/react@^19.2.1",
     "react/": "https://aistudiocdn.com/react@^19.2.1/",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/"
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0"
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
   <body>
     <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>
