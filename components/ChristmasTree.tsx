@@ -7,8 +7,8 @@ interface TreeProps {
 
 const ChristmasTree: React.FC<TreeProps> = ({ onInteraction }) => {
   const [decorations, setDecorations] = useState<Decoration[]>([]);
-  // Update: Since 'tree.png' is missing, use a high-quality Unsplash image by default
-  const [treeImg, setTreeImg] = useState("https://images.unsplash.com/photo-1544967082-d9d25d867d66?auto=format&fit=crop&w=600&q=80");
+  // Use local tree.png from public folder
+  const [treeImg, setTreeImg] = useState("/tree.png");
   const [imgError, setImgError] = useState(false);
 
   // Game specific items: Hammer (Cody), Wrench (May), Yarn (Rose's Room), Book (Hakim), Bee (Tree level), Snowglobe, etc.
@@ -56,10 +56,10 @@ const ChristmasTree: React.FC<TreeProps> = ({ onInteraction }) => {
         draggable={false}
         onError={() => {
             if (!imgError) {
-                console.warn("Tree image failed to load, falling back to icon.");
+                console.warn("Tree image failed to load, falling back to Unsplash.");
                 setImgError(true);
-                // Fallback to cartoon icon if the Unsplash image fails
-                setTreeImg("https://cdn-icons-png.flaticon.com/512/2619/2619236.png");
+                // Fallback to Unsplash image if local tree.png fails
+                setTreeImg("https://images.unsplash.com/photo-1544967082-d9d25d867d66?auto=format&fit=crop&w=600&q=80");
             }
         }}
       />
