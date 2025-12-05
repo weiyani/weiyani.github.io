@@ -51,10 +51,11 @@
 2. 连接你的 GitHub 账户并选择此仓库
 3. 配置构建设置：
    - Production branch: `master`
-   - Framework preset: `Vite`
    - Build command: `npm run build`
    - Build output directory: `dist`
 4. 点击 "Save and Deploy"
+
+> 注意：如果在 Cloudflare Pages 界面中没有看到 Framework preset 选项，请直接手动填写 Build command 和 Build output directory。
 
 #### 方法二：使用 Wrangler CLI 手动部署
 
