@@ -69,10 +69,13 @@
    wrangler login
    ```
 
-3. 部署应用：
+3. 构建并部署应用：
    ```bash
+   npm run build
    npm run deploy:cloudflare
    ```
+
+> 注意：Cloudflare Pages 更推荐使用 GitHub 集成自动部署，Wrangler CLI 主要用于 Workers 部署。对于静态网站，GitHub 集成方式更简单且功能更完整。
 
 ## 本地开发
 
