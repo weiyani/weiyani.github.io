@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "cloudbase framework:deploy"
   },
   "dependencies": {
     "lucide-react": "^0.359.0",
