@@ -73,12 +73,12 @@ const Countdown: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center p-3 md:p-6 bg-white/80 backdrop-blur-md rounded-2xl md:rounded-3xl border-2 md:border-4 border-game-yellow shadow-[0_5px_0_rgba(0,0,0,0.1)] md:shadow-[0_10px_0_rgba(0,0,0,0.1)] max-w-3xl mx-auto mt-4 md:mt-10 z-10 relative transform md:-rotate-1 transition hover:rotate-0 duration-300">
       {/* HUD Header */}
-      <div className="absolute -top-4 md:-top-6 bg-game-orange text-white px-4 md:px-8 py-1 md:py-2 rounded-full font-chinese text-sm md:text-2xl border-2 border-white shadow-lg tracking-wide md:tracking-widest flex items-center gap-1 md:gap-2">
-         <Star fill="white" size={16} className="md:hidden" />
-         <Star fill="white" size={20} className="hidden md:block" /> 
-         <span className="whitespace-nowrap">当前任务:庆祝 {anniversaryYear} 周年</span>
-         <Star fill="white" size={16} className="md:hidden" />
-         <Star fill="white" size={20} className="hidden md:block" />
+      <div className="absolute -top-4 md:-top-6 bg-game-orange text-white px-4 md:px-8 py-1 md:py-2 rounded-full font-chinese text-xs md:text-base border-2 border-white shadow-lg tracking-wide md:tracking-widest flex items-center gap-1 md:gap-2">
+         <Star fill="white" size={12} className="md:hidden" />
+         <Star fill="white" size={16} className="hidden md:block" /> 
+         <span className="whitespace-nowrap">任务:点击装扮圣诞树</span>
+         <Star fill="white" size={12} className="md:hidden" />
+         <Star fill="white" size={16} className="hidden md:block" />
       </div>
 
       <div className="flex items-center gap-1 md:gap-2 mb-3 md:mb-6 mt-3 md:mt-4">

@@ -14,8 +14,8 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
   const requestRef = useRef<number>(0);
   
   const GRAVITY = 0.6;
-  const JUMP_FORCE = -12; 
-  const GAME_SPEED = 6;
+  const JUMP_FORCE = -15; // 增加跳跃高度
+  const GAME_SPEED = 4; // 降低速度
   const WIN_SCORE = 520; // 520 is meaningful in Chinese culture (I love you)
   
   // Representing "Cody" (Green) or "May" (Blue)
@@ -138,20 +138,10 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
         let obs = obstacles[i];
         obs.x -= GAME_SPEED;
 
-        // Draw Bee (Yellow/Black stripes)
-        ctx.fillStyle = '#FFD700';
-        ctx.beginPath();
-        ctx.arc(obs.x + obs.w/2, obs.y + obs.h/2, obs.w/2, 0, Math.PI*2);
-        ctx.fill();
-        ctx.fillStyle = '#000'; // Stripes
-        ctx.fillRect(obs.x + 5, obs.y + 5, 20, 5);
-        ctx.fillRect(obs.x + 5, obs.y + 15, 20, 5);
-        
-        // Wings
-        ctx.fillStyle = 'rgba(255,255,255,0.7)';
-        ctx.beginPath();
-        ctx.ellipse(obs.x + 15, obs.y - 5, 10, 5, 0, 0, Math.PI*2);
-        ctx.fill();
+        // Draw Bee emoji 🐝
+        ctx.font = `${obs.w * 1.5}px sans-serif`;
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🐝', obs.x, obs.y + obs.h / 2);
 
         if (
           player.x < obs.x + obs.w &&
@@ -166,18 +156,17 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
         if (obs.x + obs.w < 0) obstacles.splice(i, 1);
       }
 
-      // Update & Draw Collectibles (Pages)
+      // Update & Draw Collectibles (Hearts)
       for (let i = collectibles.length - 1; i >= 0; i--) {
         let item = collectibles[i];
         if (item.collected) continue;
         
         item.x -= GAME_SPEED;
 
-        // Draw Book Page
-        ctx.fillStyle = '#E71D36'; // Red cover like Dr. Hakim
-        ctx.fillRect(item.x, item.y, 20, 25);
-        ctx.fillStyle = '#FFF'; // Pages
-        ctx.fillRect(item.x + 2, item.y + 2, 16, 21);
+        // Draw Heart emoji 💗
+        ctx.font = '30px sans-serif';
+        ctx.textBaseline = 'top';
+        ctx.fillText('💗', item.x, item.y);
 
         const dx = (player.x + player.width/2) - (item.x + 10);
         const dy = (player.y + player.height/2) - (item.y + 12);
@@ -195,12 +184,50 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
         if (item.x < -20) collectibles.splice(i, 1);
       }
 
-      // Draw Player (Alternates colors to simulate 'It Takes Two')
+      // Draw Player (More human-like character)
+      // 身体（蓝色或绿色交替）
       ctx.fillStyle = Math.floor(frameCount / 30) % 2 === 0 ? '#4CC9F0' : '#70C1B3'; // Blue (May) / Green (Cody)
-      ctx.fillRect(player.x, player.y, player.width, player.height);
-      // Head
-      ctx.fillStyle = '#F5D0A9';
-      ctx.fillRect(player.x + 5, player.y - 10, 30, 10);
+      ctx.fillRect(player.x + 10, player.y + 15, 20, 25); // 身体
+      
+      // 头部（圆形）
+      ctx.fillStyle = '#F5D0A9'; // 肤色
+      ctx.beginPath();
+      ctx.arc(player.x + 20, player.y + 10, 10, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // 眼睛
+      ctx.fillStyle = '#000';
+      ctx.beginPath();
+      ctx.arc(player.x + 17, player.y + 8, 2, 0, Math.PI * 2);
+      ctx.arc(player.x + 23, player.y + 8, 2, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // 嘴巴（微笑）
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(player.x + 20, player.y + 10, 5, 0, Math.PI);
+      ctx.stroke();
+      
+      // 手臂（动态摆动）
+      const armSwing = Math.sin(frameCount * 0.2) * 3;
+      ctx.fillStyle = Math.floor(frameCount / 30) % 2 === 0 ? '#4CC9F0' : '#70C1B3';
+      // 左手
+      ctx.fillRect(player.x + 5, player.y + 20 + armSwing, 5, 15);
+      // 右手
+      ctx.fillRect(player.x + 30, player.y + 20 - armSwing, 5, 15);
+      
+      // 腿部（跑步动画）
+      const legAnimation = Math.floor(frameCount / 10) % 2;
+      if (legAnimation === 0) {
+        // 左腿前，右腿后
+        ctx.fillRect(player.x + 12, player.y + 35, 6, 10); // 左腿
+        ctx.fillRect(player.x + 22, player.y + 37, 6, 8);  // 右腿
+      } else {
+        // 右腿前，左腿后
+        ctx.fillRect(player.x + 12, player.y + 37, 6, 8);  // 左腿
+        ctx.fillRect(player.x + 22, player.y + 35, 6, 10); // 右腿
+      }
 
       requestRef.current = requestAnimationFrame(gameLoop);
     };
@@ -218,7 +245,7 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
         <button onClick={onClose} className="absolute top-1 right-2 md:top-2 md:right-4 text-gray-400 hover:text-red-500 text-2xl md:text-3xl font-display z-50 bg-white rounded-full w-8 h-8 md:w-10 md:h-10 flex items-center justify-center shadow-md hover:shadow-lg transition-all active:scale-95">✕</button>
         
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 md:mb-6 px-2 md:px-4 text-gray-800 gap-2">
-          <h2 className="text-xl md:text-4xl font-logo text-game-blue drop-shadow-sm transform md:-rotate-2">双人成行大冒险</h2>
+          <h2 className="text-xl md:text-4xl font-logo text-game-blue drop-shadow-sm transform md:-rotate-2">单人成行大冒险</h2>
           <div className="flex items-center gap-1 md:gap-2 text-lg md:text-2xl font-bold text-game-book bg-yellow-100 px-3 md:px-6 py-1 md:py-2 rounded-full border-2 border-game-orange">
             <BookOpen className="text-game-book w-4 h-4 md:w-6 md:h-6" /> {score} / {WIN_SCORE}
           </div>
@@ -232,7 +259,7 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
             )}
             {gameState === GameState.GAME_OVER && (
                 <div className="flex flex-col items-center gap-2">
-                    <p className="text-2xl md:text-3xl text-gray-700">哎呀! 需要合作!</p>
+                    <p className="text-2xl md:text-3xl text-gray-700">哎呀! 需要更多爱!</p>
                     <button 
                         onClick={initGame}
                         className="px-6 md:px-8 py-2 md:py-3 bg-game-green text-white rounded-full text-lg md:text-xl hover:scale-110 transition shadow-lg border-b-4 border-teal-600 active:scale-95"

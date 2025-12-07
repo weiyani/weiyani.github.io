@@ -5,6 +5,7 @@ import ChristmasTree from './components/ChristmasTree';
 import MusicPlayer from './components/MusicPlayer';
 import MiniGame from './components/MiniGame';
 import Fireworks from './components/Fireworks';
+import MusicCountdown from './components/MusicCountdown';
 import { PHOTOS, LOVE_LETTER } from './constants';
 import { X, ChevronLeft, ChevronRight, Gamepad, Heart } from 'lucide-react';
 
@@ -56,20 +57,45 @@ const App: React.FC = () => {
   const [showMusicPlayer, setShowMusicPlayer] = useState(false);
   const [currentLyric, setCurrentLyric] = useState('');
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const [showMusicCountdown, setShowMusicCountdown] = useState(false);
+  const [hasPlayedMusic, setHasPlayedMusic] = useState(false); // 记录是否已经播放过
 
   const handleTreeInteraction = (type: 'photo' | 'music' | 'letter' | 'game') => {
-    // 点击音乐书时，显示音乐播放器
+    // 点击音乐书时
     if (type === 'music') {
-      setShowMusicPlayer(true);
-      setIsMusicPlaying(true);
+      if (!hasPlayedMusic) {
+        // 第一次打开，显示倒计时
+        setShowMusicCountdown(true);
+      } else {
+        // 非第一次，直接播放
+        setShowMusicPlayer(true);
+        setIsMusicPlaying(true);
+      }
     } else {
       setActiveModal(type);
     }
   };
 
+  const handleCountdownComplete = () => {
+    setShowMusicCountdown(false);
+    setShowMusicPlayer(true);
+    setIsMusicPlaying(true);
+    setHasPlayedMusic(true); // 标记为已播放
+  };
+
   return (
-    <div className="relative min-h-screen flex flex-col overflow-hidden font-sans text-gray-800 selection:bg-game-yellow selection:text-black">
+    <div 
+      className="relative min-h-screen flex flex-col overflow-hidden font-sans text-gray-800 selection:bg-game-yellow selection:text-black"
+      style={{
+        background: (isMusicPlaying && showMusicPlayer) 
+          ? '#1a1a1a' // 音乐播放时使用深色背景
+          : 'linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)' // 默认粉蓝渐变
+      }}
+    >
       <SnowBackground currentLyric={currentLyric} isPlaying={isMusicPlaying && showMusicPlayer} />
+      
+      {/* 音乐倒计时 */}
+      {showMusicCountdown && <MusicCountdown onComplete={handleCountdownComplete} />}
       
       {/* 音乐播放器 - 显示在左上角 */}
       {showMusicPlayer && (
@@ -92,7 +118,7 @@ const App: React.FC = () => {
            
            <div className="flex flex-col items-center">
               <div className="bg-game-orange text-white px-3 md:px-4 py-1 rounded shadow-md transform -rotate-3 mb-2 font-chinese text-xs md:text-base tracking-wide md:tracking-widest border-2 border-white">
-                  🎄 圣诞快乐 & 结婚纪念日 💍
+                  🎄 圣诞快乐 & 纪念日 💍
               </div>
               
               {/* It Takes Two Logo Style */}
@@ -121,21 +147,19 @@ const App: React.FC = () => {
         </div>
         
         <div className="pb-4 md:pb-6 text-center text-gray-600/80 text-xs md:text-sm font-chinese tracking-wide animate-pulse px-2">
-          <span className="bg-white/50 px-2 md:px-3 py-1 rounded-full border border-white/50 inline-block">
-            💡 点击装扮圣诞树，随机掉落惊喜爱之书! 📕
-          </span>
+
         </div>
       </main>
 
       {/* Modals */}
       {activeModal === 'photo' && (
-        <Modal onClose={() => setActiveModal(null)} title="幸福瞬间 (照片墙)">
+        <Modal onClose={() => setActiveModal(null)} title="幸福瞬间">
           <PhotoCarousel />
         </Modal>
       )}
 
       {activeModal === 'letter' && (
-        <Modal onClose={() => setActiveModal(null)} title="来自哈基姆博士的信">
+        <Modal onClose={() => setActiveModal(null)} title="来自神秘人的信">
           <div className="font-chinese text-sm md:text-lg text-gray-700 whitespace-pre-line leading-relaxed p-4 md:p-6 bg-[#FFF8E1] rounded-lg md:rounded-xl border-l-4 border-game-book shadow-inner relative overflow-hidden">
             <div className="absolute top-0 right-0 p-2 md:p-4 opacity-10">
                <Gamepad size={60} className="md:hidden" />
