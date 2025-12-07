@@ -30,7 +30,12 @@ const PhotoCarousel = () => {
 
   return (
     <div className="relative aspect-video bg-gray-900 rounded-lg md:rounded-xl overflow-hidden shadow-xl group border-2 md:border-4 border-white">
-      <img src={PHOTOS[idx]} alt="Memory" className="w-full h-full object-cover" />
+      <img 
+        src={PHOTOS[idx]} 
+        alt="Memory" 
+        className="w-full h-full object-cover" 
+        style={{ imageOrientation: 'from-image' }}
+      />
       <button onClick={prev} className="absolute left-1 md:left-2 top-1/2 -translate-y-1/2 bg-white/20 p-2 md:p-3 rounded-full text-white backdrop-blur-md border-2 border-white/50 hover:bg-game-blue hover:border-game-blue transition-all active:scale-95">
         <ChevronLeft size={20} className="md:hidden" strokeWidth={3} />
         <ChevronLeft className="hidden md:block" strokeWidth={3} />

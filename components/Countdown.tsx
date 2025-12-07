@@ -76,7 +76,7 @@ const Countdown: React.FC = () => {
       <div className="absolute -top-4 md:-top-6 bg-game-orange text-white px-4 md:px-8 py-1 md:py-2 rounded-full font-chinese text-xs md:text-base border-2 border-white shadow-lg tracking-wide md:tracking-widest flex items-center gap-1 md:gap-2">
          <Star fill="white" size={12} className="md:hidden" />
          <Star fill="white" size={16} className="hidden md:block" /> 
-         <span className="whitespace-nowrap">任务:点击装扮圣诞树</span>
+         <span className="whitespace-nowrap">阶段任务:装扮圣诞树</span>
          <Star fill="white" size={12} className="md:hidden" />
          <Star fill="white" size={16} className="hidden md:block" />
       </div>
