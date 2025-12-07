@@ -379,7 +379,7 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
                     ) : level === 3 ? (
                       <span>达到 <span className="font-bold text-orange-600">{currentLevelConfig.scoreToPass}</span> 分完成LV3，解锁极限挑战！ | 速度: {currentLevelConfig.speed} | 跳跃: {Math.abs(currentLevelConfig.jumpForce)}</span>
                     ) : (
-                      <span className="font-bold text-pink-600">🎉 LV4 无限模式！坚持到最后！</span>
+                      <span className="font-bold text-pink-600">🎉 LV4 无限模式！看看你的爱有多少！</span>
                     )}
                   </div>
                 </div>

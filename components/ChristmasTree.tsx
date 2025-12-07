@@ -177,7 +177,7 @@ const emojis = [
         </div>
         {/* 功能说明 */}
         <div className="mt-3 text-center text-xs md:text-sm text-gray-600 font-chinese">
-          💡 点击装扮圣诞树，随机掉落惊喜爱之书! 📕
+          💡 点击装扮圣诞树，随机掉落惊喜礼盒🎁
         </div>
         {foundBooks.size === BOOK_CONFIG.length && (
           <div className="mt-3 text-center text-sm md:text-base font-chinese font-bold text-game-orange animate-bounce">

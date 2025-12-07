@@ -168,7 +168,7 @@ const SnowBackground: React.FC<SnowBackgroundProps> = ({ currentLyric = '', isPl
 
     const width = window.innerWidth;
     const height = window.innerHeight;
-    const count = 80;
+    const count = 30;
     const lyricCount = 8;
     const colors = ['#FF9F1C', '#FFFFFF', '#4CC9F0', '#FFBF00', '#FF6B6B', '#FFC3A0'];
     const lyricColors = [
