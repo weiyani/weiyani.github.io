@@ -1,10 +1,28 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const Fireworks: React.FC<{ active: boolean; onClose: () => void }> = ({ active, onClose }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [countdown, setCountdown] = useState(5);
+  const [canClose, setCanClose] = useState(false);
 
   useEffect(() => {
     if (!active) return;
+
+    // 重置倒计时状态
+    setCountdown(5);
+    setCanClose(false);
+
+    // 倒计时逻辑
+    const countdownInterval = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          clearInterval(countdownInterval);
+          setCanClose(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -72,26 +90,38 @@ const Fireworks: React.FC<{ active: boolean; onClose: () => void }> = ({ active,
 
     return () => {
       clearInterval(intervalId);
+      clearInterval(countdownInterval);
       cancelAnimationFrame(animId);
     };
   }, [active, onClose]);
 
   if (!active) return null;
 
+  const handleClose = () => {
+    if (canClose) {
+      onClose();
+    }
+  };
+
   return (
     <div 
-      className="fixed inset-0 z-[60] bg-black/80 flex flex-col items-center justify-center cursor-pointer"
-      onClick={onClose}
-      onTouchEnd={onClose}
+      className={`fixed inset-0 z-[60] bg-black/80 flex flex-col items-center justify-center ${canClose ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+      onClick={handleClose}
+      onTouchEnd={handleClose}
     >
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
       <div className="z-10 text-center animate-bounce pointer-events-none">
         <h1 className="text-6xl md:text-8xl font-chinese font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-pink-500 to-red-500 drop-shadow-lg mb-8">
            爱你一万年!
         </h1>
-        <p className="text-white text-xl md:text-2xl font-chinese">
-          点击任意位置关闭烟花
-        </p>
+        {!canClose ? (
+          <div className="text-white text-xl md:text-2xl font-chinese">
+          </div>
+        ) : (
+          <p className="text-white text-xl md:text-2xl font-chinese animate-pulse">
+            点击任意位置关闭烟花
+          </p>
+        )}
       </div>
     </div>
   );

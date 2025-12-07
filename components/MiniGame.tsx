@@ -21,10 +21,10 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
   
   // 关卡配置
   const LEVEL_CONFIG = [
-    { level: 1, jumpForce: -15, speed: 4, scoreToPass: 520, isInfinite: false },  // LV1: 基础难度
-    { level: 2, jumpForce: -12, speed: 6, scoreToPass: 520, isInfinite: false },  // LV2: 降低跳跃,提升速度
-    { level: 3, jumpForce: -12, speed: 6, scoreToPass: 520, isInfinite: false },   // LV3: 继续降低跳跃,加快速度
-    { level: 4, jumpForce: -12, speed: 6, scoreToPass: 0, isInfinite: true },     // LV4: 最高难度,无限模式
+    { level: 1, jumpForce: -14, speed: 6, scoreToPass: 520, isInfinite: false },  // LV1: 基础难度
+    { level: 2, jumpForce: -12, speed: 8, scoreToPass: 520, isInfinite: false },  // LV2: 降低跳跃,提升速度
+    { level: 3, jumpForce: -11, speed: 9, scoreToPass: 520, isInfinite: false },   // LV3: 继续降低跳跃,加快速度
+    { level: 4, jumpForce: -11, speed: 9, scoreToPass: 0, isInfinite: true },     // LV4: 最高难度,无限模式
   ];
   
   const currentLevelConfig = LEVEL_CONFIG[level - 1];
