@@ -181,7 +181,7 @@ const emojis = [
         </div>
         {foundBooks.size === BOOK_CONFIG.length && (
           <div className="mt-3 text-center text-sm md:text-base font-chinese font-bold text-game-orange animate-bounce">
-            🎉 所有爱之书已集齐！
+            🎉 恭喜你已完成任务！
           </div>
         )}
       </div>
