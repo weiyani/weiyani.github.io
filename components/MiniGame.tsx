@@ -50,6 +50,12 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
     };
     
     const handleTouch = (e: TouchEvent) => {
+       // 检查是否点击了关闭按钮或重试按钮，如果是则不阻止
+       const target = e.target as HTMLElement;
+       if (target.closest('button')) {
+         return; // 允许按钮的点击事件正常触发
+       }
+       
        e.preventDefault(); 
        if (gameState === GameState.PLAYING) jump();
        if (gameState === GameState.IDLE || gameState === GameState.GAME_OVER) initGame();
@@ -209,7 +215,7 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-2 md:p-4">
       <div className="bg-white border-4 md:border-8 border-game-orange rounded-2xl md:rounded-3xl p-3 md:p-6 w-full max-w-4xl relative shadow-[0_0_0_5px_#FFBF00] md:shadow-[0_0_0_10px_#FFBF00] transform md:rotate-1">
-        <button onClick={onClose} className="absolute top-1 right-2 md:top-2 md:right-4 text-gray-400 hover:text-red-500 text-2xl md:text-3xl font-display z-10">✕</button>
+        <button onClick={onClose} className="absolute top-1 right-2 md:top-2 md:right-4 text-gray-400 hover:text-red-500 text-2xl md:text-3xl font-display z-50 bg-white rounded-full w-8 h-8 md:w-10 md:h-10 flex items-center justify-center shadow-md hover:shadow-lg transition-all active:scale-95">✕</button>
         
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 md:mb-6 px-2 md:px-4 text-gray-800 gap-2">
           <h2 className="text-xl md:text-4xl font-logo text-game-blue drop-shadow-sm transform md:-rotate-2">双人成行大冒险</h2>

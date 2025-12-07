@@ -8,7 +8,12 @@ interface LyricLine {
   text: string;
 }
 
-const MusicPlayer: React.FC = () => {
+interface MusicPlayerProps { 
+  variant?: 'fixed' | 'modal';
+  onLyricChange?: (lyric: string) => void;
+  onPlayingChange?: (isPlaying: boolean) => void;
+}
+const MusicPlayer: React.FC<MusicPlayerProps> = ({ variant = 'fixed', onLyricChange, onPlayingChange }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [songs] = useState<Song[]>(DEFAULT_SONGS);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -41,19 +46,29 @@ const MusicPlayer: React.FC = () => {
       })
       .catch(err => console.error("Failed to load lyrics:", err));
       
-    // Try to trigger play programmatically on mount to handle autoplay policies better
-    const playAudio = async () => {
+    // 只在fixed模式下尝试自动播放，modal模式下不自动播放
+    if (variant === 'fixed') {
+      const playAudio = async () => {
+          if (audioRef.current) {
+              try {
+                  await audioRef.current.play();
+                  // State update handled by onPlay event
+              } catch (err) {
+                  console.log("Autoplay blocked by browser policy. User interaction required.");
+              }
+          }
+      };
+      playAudio();
+    } else {
+      // modal模式下，在组件挂载时自动播放
+      const timer = setTimeout(() => {
         if (audioRef.current) {
-            try {
-                await audioRef.current.play();
-                // State update handled by onPlay event
-            } catch (err) {
-                console.log("Autoplay blocked by browser policy. User interaction required.");
-            }
+          audioRef.current.play().catch(e => console.log("Play on open:", e));
         }
-    };
-    playAudio();
-  }, []);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [variant]);
 
   const togglePlay = () => {
     if (audioRef.current) {
@@ -69,29 +84,43 @@ const MusicPlayer: React.FC = () => {
   const handleTimeUpdate = () => {
     if (audioRef.current) {
       const currentTime = audioRef.current.currentTime;
-      // Find the last lyric line that has a time less than or equal to current time
+      // 提前1秒显示歌词
+      const displayTime = currentTime + 1;
+      
+      // Find the last lyric line that has a time less than or equal to display time
       const activeLine = lyrics.reduce((prev, curr) => {
-        return (curr.time <= currentTime) ? curr : prev;
+        return (curr.time <= displayTime) ? curr : prev;
       }, { time: 0, text: "" }); // default
       
       // Update only if text is different and not empty (unless it's the start)
       if (activeLine.text) {
           setCurrentLyric(activeLine.text);
+          // 通知父组件歌词变化
+          if (onLyricChange) {
+            onLyricChange(activeLine.text);
+          }
       }
     }
   };
 
+  const containerClass = variant === 'fixed' ? 'fixed top-4 left-4 z-50 flex flex-col items-start gap-2' : 'relative z-10 flex flex-col items-center gap-3';
   return (
-    <div className="fixed top-2 md:top-4 right-2 md:right-4 z-50 flex flex-col items-end gap-2">
+    <div className={containerClass}>
       <div className="bg-white/90 backdrop-blur-md p-1.5 md:p-2 pl-3 md:pl-4 pr-1.5 md:pr-2 rounded-full shadow-lg border border-white flex items-center gap-2 md:gap-3 transition-all hover:shadow-xl group">
         <audio 
           ref={audioRef} 
           src={songs[0].url} 
           loop={true}
-          autoPlay
+          autoPlay={variant === 'modal'}
           onTimeUpdate={handleTimeUpdate}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
+          onPlay={() => {
+            setIsPlaying(true);
+            if (onPlayingChange) onPlayingChange(true);
+          }}
+          onPause={() => {
+            setIsPlaying(false);
+            if (onPlayingChange) onPlayingChange(false);
+          }}
         />
         
         <div className="relative">
@@ -116,14 +145,7 @@ const MusicPlayer: React.FC = () => {
         </button>
       </div>
 
-      {/* Lyric Display Bubble - 移动端优化 */}
-      {currentLyric && isPlaying && (
-        <div className="bg-white/80 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2 rounded-xl shadow-md border border-christmas-blue/30 max-w-[280px] md:max-w-md animate-fade-in transition-all duration-300">
-           <p className="text-christmas-green font-chinese text-center text-xs md:text-base font-medium leading-relaxed">
-             ♪ {currentLyric} ♪
-           </p>
-        </div>
-      )}
+      {/* 在fixed模式下不显示小歌词气泡，歌词将显示在背景 */}
     </div>
   );
 };

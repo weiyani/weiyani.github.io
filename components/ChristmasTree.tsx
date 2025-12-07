@@ -11,7 +11,7 @@ const BOOK_CONFIG = [
   { color: 'red' as BookColor, emoji: '📕', action: 'letter' as const, name: '红色爱之书' },
   { color: 'blue' as BookColor, emoji: '📘', action: 'photo' as const, name: '蓝色爱之书' },
   { color: 'green' as BookColor, emoji: '📗', action: 'game' as const, name: '绿色爱之书' },
-  { color: 'purple' as BookColor, emoji: '📙', action: 'music' as const, name: '紫色爱之书' },
+  { color: 'purple' as BookColor, emoji: '📙', action: 'music' as const, name: '黄色爱之书' },
 ];
 
 const ChristmasTree: React.FC<TreeProps> = ({ onInteraction }) => {

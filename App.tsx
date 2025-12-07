@@ -53,21 +53,33 @@ const PhotoCarousel = () => {
 const App: React.FC = () => {
   const [activeModal, setActiveModal] = useState<'photo' | 'letter' | 'game' | null>(null);
   const [showFireworks, setShowFireworks] = useState(false);
+  const [showMusicPlayer, setShowMusicPlayer] = useState(false);
+  const [currentLyric, setCurrentLyric] = useState('');
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
 
   const handleTreeInteraction = (type: 'photo' | 'music' | 'letter' | 'game') => {
-    // 当点击音乐书时，直接播放音乐（音乐播放器始终在页面上）
+    // 点击音乐书时，显示音乐播放器
     if (type === 'music') {
-        // 可以在这里添加音乐播放的特殊逻辑，比如确保音乐正在播放
-        console.log('Playing music from love book');
+      setShowMusicPlayer(true);
+      setIsMusicPlaying(true);
     } else {
-        setActiveModal(type);
+      setActiveModal(type);
     }
   };
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden font-sans text-gray-800 selection:bg-game-yellow selection:text-black">
-      <SnowBackground />
-      <MusicPlayer />
+      <SnowBackground currentLyric={currentLyric} isPlaying={isMusicPlaying && showMusicPlayer} />
+      
+      {/* 音乐播放器 - 显示在左上角 */}
+      {showMusicPlayer && (
+        <MusicPlayer 
+          variant="fixed" 
+          onLyricChange={setCurrentLyric}
+          onPlayingChange={setIsMusicPlaying}
+        />
+      )}
+      
       <Fireworks active={showFireworks} onClose={() => setShowFireworks(false)} />
 
       {/* Main Content */}
