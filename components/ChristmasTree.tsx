@@ -10,7 +10,7 @@ interface TreeProps {
 const BOOK_CONFIG = [
   { color: 'red' as BookColor, emoji: '📕', action: 'letter' as const, name: '神秘人的信' },
   { color: 'blue' as BookColor, emoji: '📘', action: 'photo' as const, name: '幸福瞬间' },
-  { color: 'green' as BookColor, emoji: '📗', action: 'game' as const, name: '单人成行' },
+  { color: 'green' as BookColor, emoji: '📗', action: 'game' as const, name: '为爱奔跑' },
   { color: 'purple' as BookColor, emoji: '📙', action: 'music' as const, name: '私奔到月球' },
 ];
 
@@ -55,7 +55,7 @@ const emojis = [
     }
 
     // 20% 几率生成礼物盒（内含爱之书）
-    const isInteractive = Math.random() < 0.8;
+    const isInteractive = Math.random() < 0.2;
     
     let newDecoration: Decoration;
     

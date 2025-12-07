@@ -174,7 +174,7 @@ const App: React.FC = () => {
         <MiniGame 
           onClose={() => setActiveModal(null)} 
           onWin={() => {
-            setActiveModal(null);
+            // 只触发烟花，不关闭游戏窗口（让玩家可以点击进入LV4）
             setShowFireworks(true);
           }} 
         />

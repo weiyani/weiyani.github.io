@@ -5,6 +5,7 @@ const Fireworks: React.FC<{ active: boolean; onClose: () => void }> = ({ active,
 
   useEffect(() => {
     if (!active) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -73,23 +74,23 @@ const Fireworks: React.FC<{ active: boolean; onClose: () => void }> = ({ active,
       clearInterval(intervalId);
       cancelAnimationFrame(animId);
     };
-  }, [active]);
+  }, [active, onClose]);
 
   if (!active) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/80 flex flex-col items-center justify-center">
+    <div 
+      className="fixed inset-0 z-[60] bg-black/80 flex flex-col items-center justify-center cursor-pointer"
+      onClick={onClose}
+    >
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
-      <div className="z-10 text-center animate-bounce">
+      <div className="z-10 text-center animate-bounce pointer-events-none">
         <h1 className="text-6xl md:text-8xl font-chinese font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-pink-500 to-red-500 drop-shadow-lg mb-8">
            爱你一万年!
         </h1>
-        <button 
-          onClick={onClose}
-          className="px-8 py-3 bg-white/20 hover:bg-white/40 text-white rounded-full backdrop-blur-sm border border-white/50 transition-all font-bold font-chinese"
-        >
-          关闭
-        </button>
+        <p className="text-white text-xl md:text-2xl font-chinese">
+          点击任意位置关闭烟花
+        </p>
       </div>
     </div>
   );
