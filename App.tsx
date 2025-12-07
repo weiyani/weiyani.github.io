@@ -13,11 +13,11 @@ import { X, ChevronLeft, ChevronRight, Gamepad, Heart } from 'lucide-react';
 const Modal: React.FC<{ onClose: () => void; children: React.ReactNode; title?: string }> = ({ onClose, children, title }) => (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-2 md:p-4 animate-in fade-in duration-300">
     <div className="bg-white rounded-2xl md:rounded-[2rem] p-4 md:p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto relative shadow-2xl border-4 md:border-8 border-game-yellow transform md:rotate-1">
-      <button onClick={onClose} className="absolute top-2 right-2 md:-top-6 md:-right-6 bg-game-orange text-white rounded-full p-1.5 md:p-2 hover:bg-red-500 transition-colors shadow-lg border-2 md:border-4 border-white z-10">
+      <button onClick={onClose} className="absolute top-2 right-2 md:top-3 md:right-3 bg-game-orange text-white rounded-full p-1.5 md:p-2.5 hover:bg-red-500 transition-colors shadow-lg border-2 md:border-4 border-white z-10">
         <X size={20} className="md:hidden" strokeWidth={3} />
         <X size={28} className="hidden md:block" strokeWidth={3} />
       </button>
-      {title && <h2 className="text-xl md:text-3xl font-chinese text-game-blue text-center mb-4 md:mb-6 border-b-4 border-dotted border-gray-200 pb-2 font-bold pr-8 md:pr-0">{title}</h2>}
+      {title && <h2 className="text-xl md:text-3xl font-chinese text-game-blue text-center mb-4 md:mb-6 border-b-4 border-dotted border-gray-200 pb-2 font-bold pr-8 md:pr-12">{title}</h2>}
       {children}
     </div>
   </div>
