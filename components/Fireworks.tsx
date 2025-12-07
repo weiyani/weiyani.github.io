@@ -82,6 +82,7 @@ const Fireworks: React.FC<{ active: boolean; onClose: () => void }> = ({ active,
     <div 
       className="fixed inset-0 z-[60] bg-black/80 flex flex-col items-center justify-center cursor-pointer"
       onClick={onClose}
+      onTouchEnd={onClose}
     >
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
       <div className="z-10 text-center animate-bounce pointer-events-none">
