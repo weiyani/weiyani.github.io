@@ -9,5 +9,13 @@ export default defineConfig({
   base: '/', 
   build: {
     outDir: 'dist',
+  },
+  server: {
+    host: true, // 允许局域网访问
+    port: 5173, // 开发服务器端口
+  },
+  preview: {
+    host: true, // 允许局域网访问
+    port: 4173, // 预览服务器端口
   }
 })
