@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GameState } from '../types';
-import { BookOpen, Trophy, Skull } from 'lucide-react';
+import { BookOpen, Trophy, Skull, Shield } from 'lucide-react';
 
 interface MiniGameProps {
   onWin: () => void;
@@ -14,6 +14,9 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
   const [readyForNextLevel, setReadyForNextLevel] = useState(false); // 准备进入下一关
   const [hasTriggeredFireworks, setHasTriggeredFireworks] = useState(false); // 是否已触发烟花
   const [finalScore, setFinalScore] = useState(0); // 保存LV4失败时的最终分数
+  const [retryCount, setRetryCount] = useState(0); // 当前关卡重试次数
+  const [shields, setShields] = useState(0); // 当前拥有的护盾数
+  const [isLv4EasyMode, setIsLv4EasyMode] = useState(false); // LV4 是否为简单模式
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const requestRef = useRef<number>(0);
   
@@ -21,10 +24,16 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
   
   // 关卡配置
   const LEVEL_CONFIG = [
-    { level: 1, jumpForce: -14, speed: 6, scoreToPass: 520, isInfinite: false },  // LV1: 基础难度
-    { level: 2, jumpForce: -12, speed: 8, scoreToPass: 520, isInfinite: false },  // LV2: 降低跳跃,提升速度
-    { level: 3, jumpForce: -11, speed: 9, scoreToPass: 520, isInfinite: false },   // LV3: 继续降低跳跃,加快速度
-    { level: 4, jumpForce: -11, speed: 9, scoreToPass: 0, isInfinite: true },     // LV4: 最高难度,无限模式
+    { level: 1, jumpForce: -13, speed: 6, scoreToPass: 520, isInfinite: false },  // LV1: 基础难度
+    { level: 2, jumpForce: -12, speed: 7.5, scoreToPass: 520, isInfinite: false },  // LV2: 降低跳跃,提升速度
+    { level: 3, jumpForce: -11.5, speed: 8.5, scoreToPass: 520, isInfinite: false },   // LV3: 继续降低跳跃,加快速度
+    {
+      level: 4,
+      jumpForce: isLv4EasyMode ? -12 : -11.5, // 简单模式: LV1参数 (-13), 困难模式: LV3参数 (-12)
+      speed: isLv4EasyMode ? 7.5 : 8.5,         // 简单模式: LV1参数 (7.5), 困难模式: LV3参数 (8.5)
+      scoreToPass: 0,
+      isInfinite: true
+    },     // LV4: 无限模式
   ];
   
   const currentLevelConfig = LEVEL_CONFIG[level - 1];
@@ -34,6 +43,7 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
   const obstaclesRef = useRef<{x: number, y: number, w: number, h: number, type: 'bee' | 'toolbox'}[]>([]);
   const collectiblesRef = useRef<{x: number, y: number, collected: boolean}[]>([]); // Books/Pages
   const scoreRef = useRef(0);
+  const shieldsRef = useRef(0);
   
   // 新增：控制蜜蜂生成的引用
   const heartsSinceLastBeeRef = useRef(0);
@@ -45,6 +55,7 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
     collectiblesRef.current = [];
     heartsSinceLastBeeRef.current = 0;
     nextBeeThresholdRef.current = Math.floor(Math.random() * 5) + 5;
+    shieldsRef.current = shields; // 同步护盾数量到 Ref
     setGameState(GameState.PLAYING);
     setReadyForNextLevel(false); // 重置下一关准备状态
   };
@@ -192,12 +203,24 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
           player.y < obs.y + obs.h &&
           player.height + player.y > obs.y
         ) {
+          // 检查是否有护盾
+          if (shieldsRef.current > 0) {
+            shieldsRef.current -= 1;
+            setShields(shieldsRef.current); // 更新 UI
+            obstacles.splice(i, 1); // 移除蜜蜂，抵消一次伤害
+            continue; // 继续游戏
+          }
+
           // 游戏失败，先保存分数（LV4用），然后清零
           if (level === 4) {
             setFinalScore(scoreRef.current); // 保存LV4最终分数
           }
+          // 保存当前分数用于显示（在清零前）
+          setFinalScore(scoreRef.current);
+          
           scoreRef.current = 0;
           setScore(0);
+          setRetryCount(prev => prev + 1); // 增加重试次数
           setGameState(GameState.GAME_OVER);
           return;
         }
@@ -319,13 +342,21 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
               LV{level}
             </div>
           </div>
-          <div className="flex items-center gap-1 md:gap-2 text-lg md:text-2xl font-bold text-game-book bg-yellow-100 px-3 md:px-6 py-1 md:py-2 rounded-full border-2 border-game-orange">
-            <BookOpen className="text-game-book w-4 h-4 md:w-6 md:h-6" /> 
-            {level < 4 ? (
-              <>{score} / {currentLevelConfig.scoreToPass}</>
-            ) : (
-              <>{score}</>
+          <div className="flex items-center gap-2">
+            {shields > 0 && (
+              <div className="flex items-center gap-1 md:gap-2 text-lg md:text-2xl font-bold text-blue-600 bg-blue-100 px-3 md:px-6 py-1 md:py-2 rounded-full border-2 border-blue-400">
+                <Shield className="w-4 h-4 md:w-6 md:h-6" />
+                {shields}
+              </div>
             )}
+            <div className="flex items-center gap-1 md:gap-2 text-lg md:text-2xl font-bold text-game-book bg-yellow-100 px-3 md:px-6 py-1 md:py-2 rounded-full border-2 border-game-orange">
+              <BookOpen className="text-game-book w-4 h-4 md:w-6 md:h-6" />
+              {level < 4 ? (
+                <>{score} / {currentLevelConfig.scoreToPass}</>
+              ) : (
+                <>{score}</>
+              )}
+            </div>
           </div>
         </div>
 
@@ -343,6 +374,8 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
                           // 进入下一关时，分数清零
                           scoreRef.current = 0;
                           setScore(0);
+                          setRetryCount(0); // 重置重试次数
+                          setShields(0); // 重置护盾
                           setLevel(level + 1);
                           setReadyForNextLevel(false);
                           initGame();
@@ -356,6 +389,29 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
             {gameState === GameState.GAME_OVER && (
                 <div className="flex flex-col items-center gap-2">
                     <p className="text-2xl md:text-3xl text-gray-700">哎呀! 需要更多爱!</p>
+                    
+                    {/* 护盾兑换按钮 - 仅在 LV2/LV3 且重试 5 次以上时显示 */}
+                    {(level === 2 || level === 3) && retryCount >= 5 && finalScore >= 160 && (
+                      <div className="flex flex-col items-center gap-2 mb-2 p-3 bg-blue-50 rounded-xl border-2 border-blue-200 animate-pulse">
+                        <p className="text-sm text-blue-600 font-bold">
+                          🛡️ 护盾救援：上次获得 {finalScore} 爱心
+                        </p>
+                        <button
+                          onClick={() => {
+                            const newShields = Math.floor(finalScore / 160);
+                            if (newShields > 0) {
+                              setShields(prev => prev + newShields);
+                              setFinalScore(prev => prev % 160); // 扣除已兑换的分数
+                            }
+                          }}
+                          className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition shadow-md hover:scale-105 active:scale-95"
+                        >
+                          <Shield className="w-4 h-4" />
+                          消耗爱心兑换 {Math.floor(finalScore / 160)} 个护盾
+                        </button>
+                      </div>
+                    )}
+
                     {level === 4 && (
                       <div className="mb-2 p-3 md:p-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg border-2 border-purple-300">
                         <p className="text-xl md:text-3xl font-bold text-purple-600 mb-1">最终分数</p>
@@ -364,7 +420,23 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
                         </p>
                       </div>
                     )}
-                    <button 
+                    {level === 4 && (
+                      <div className="flex gap-2 mb-2">
+                        <button
+                          onClick={() => setIsLv4EasyMode(true)}
+                          className={`px-4 py-2 rounded-full text-sm font-bold transition ${isLv4EasyMode ? 'bg-green-500 text-white ring-2 ring-green-300' : 'bg-gray-200 text-gray-500 hover:bg-gray-300'}`}
+                        >
+                          简单模式 (LV1速度)
+                        </button>
+                        <button
+                          onClick={() => setIsLv4EasyMode(false)}
+                          className={`px-4 py-2 rounded-full text-sm font-bold transition ${!isLv4EasyMode ? 'bg-red-500 text-white ring-2 ring-red-300' : 'bg-gray-200 text-gray-500 hover:bg-gray-300'}`}
+                        >
+                          困难模式 (LV3速度)
+                        </button>
+                      </div>
+                    )}
+                    <button
                         onClick={() => {
                           scoreRef.current = 0;
                           setScore(0);
@@ -383,12 +455,28 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
                     <div className="text-2xl md:text-4xl text-game-orange font-bold flex items-center justify-center gap-2 animate-pulse">
                         <Trophy className="text-yellow-500 w-8 h-8 md:w-12 md:h-12" /> 完成LV3！准备进入极限挑战...
                     </div>
-                    <button 
+                    <div className="flex gap-3 mt-2">
+                      <button
+                        onClick={() => setIsLv4EasyMode(true)}
+                        className={`px-4 py-2 rounded-full text-lg font-bold transition border-b-4 active:scale-95 ${isLv4EasyMode ? 'bg-green-500 border-green-700 text-white scale-105' : 'bg-gray-100 border-gray-300 text-gray-400'}`}
+                      >
+                        简单模式
+                      </button>
+                      <button
+                        onClick={() => setIsLv4EasyMode(false)}
+                        className={`px-4 py-2 rounded-full text-lg font-bold transition border-b-4 active:scale-95 ${!isLv4EasyMode ? 'bg-red-500 border-red-700 text-white scale-105' : 'bg-gray-100 border-gray-300 text-gray-400'}`}
+                      >
+                        困难模式
+                      </button>
+                    </div>
+                    <button
                         onClick={() => {
                           console.log('🔥 点击进入LV4按钮');
                           // 进入LV4时，分数清零
                           scoreRef.current = 0;
                           setScore(0);
+                          setRetryCount(0);
+                          setShields(0);
                           setLevel(4);
                           setReadyForNextLevel(false);
                           initGame();
@@ -396,7 +484,7 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
                         }}
                         className="mt-3 px-8 md:px-12 py-3 md:py-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full text-xl md:text-2xl font-bold hover:scale-110 transition shadow-lg border-b-4 border-red-700 active:scale-95 animate-bounce"
                     >
-                        进入 LV4 无限模式 🔥
+                        进入 LV4 无限模式 ({isLv4EasyMode ? '简单' : '困难'}) 🔥
                     </button>
                 </div>
             )}
@@ -412,7 +500,7 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
                     ) : level === 3 ? (
                       <span>达到 <span className="font-bold text-orange-600">{currentLevelConfig.scoreToPass}</span> 分完成LV3，解锁极限挑战！ | 速度: {currentLevelConfig.speed} | 跳跃: {Math.abs(currentLevelConfig.jumpForce)}</span>
                     ) : (
-                      <span className="font-bold text-pink-600">🎉 LV4 无限模式！看看你的爱有多少！</span>
+                      <span className="font-bold text-pink-600">🎉 LV4 无限模式 ({isLv4EasyMode ? '简单' : '困难'})！看看你的爱有多少！</span>
                     )}
                   </div>
                 </div>
