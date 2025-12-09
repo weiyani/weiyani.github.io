@@ -97,7 +97,11 @@ const App: React.FC = () => {
           : 'linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)' // 默认粉蓝渐变
       }}
     >
-      <SnowBackground currentLyric={currentLyric} isPlaying={isMusicPlaying && showMusicPlayer} />
+      <SnowBackground
+        currentLyric={currentLyric}
+        isPlaying={isMusicPlaying && showMusicPlayer}
+        isPaused={activeModal === 'game'}
+      />
       
       {/* 音乐倒计时 */}
       {showMusicCountdown && <MusicCountdown onComplete={handleCountdownComplete} />}

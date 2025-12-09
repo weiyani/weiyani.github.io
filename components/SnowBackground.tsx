@@ -3,9 +3,10 @@ import React, { useEffect, useRef } from 'react';
 interface SnowBackgroundProps {
   currentLyric?: string;
   isPlaying?: boolean;
+  isPaused?: boolean;
 }
 
-const SnowBackground: React.FC<SnowBackgroundProps> = ({ currentLyric = '', isPlaying = false }) => {
+const SnowBackground: React.FC<SnowBackgroundProps> = ({ currentLyric = '', isPlaying = false, isPaused = false }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<{
     x: number;
@@ -141,7 +142,9 @@ const SnowBackground: React.FC<SnowBackgroundProps> = ({ currentLyric = '', isPl
       animationIdRef.current = requestAnimationFrame(animate);
     };
 
-    animate();
+    if (!isPaused) {
+      animate();
+    }
 
     const handleResize = () => {
       width = window.innerWidth;
@@ -156,7 +159,7 @@ const SnowBackground: React.FC<SnowBackgroundProps> = ({ currentLyric = '', isPl
       cancelAnimationFrame(animationIdRef.current);
       window.removeEventListener('resize', handleResize);
     };
-  }, []); // 只在组件挂载时初始化
+  }, [isPaused]); // 依赖 isPaused，当暂停状态改变时重新执行
 
   // 单独的 effect 处理模式切换（播放/停止）
   useEffect(() => {

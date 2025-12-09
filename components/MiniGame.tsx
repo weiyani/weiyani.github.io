@@ -34,11 +34,17 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
   const obstaclesRef = useRef<{x: number, y: number, w: number, h: number, type: 'bee' | 'toolbox'}[]>([]);
   const collectiblesRef = useRef<{x: number, y: number, collected: boolean}[]>([]); // Books/Pages
   const scoreRef = useRef(0);
+  
+  // 新增：控制蜜蜂生成的引用
+  const heartsSinceLastBeeRef = useRef(0);
+  const nextBeeThresholdRef = useRef(Math.floor(Math.random() * 5) + 5); // 5-9个爱心后生成蜜蜂
 
   const initGame = () => {
     playerRef.current = { x: 50, y: 200, dy: 0, width: 40, height: 40, grounded: false, color: '#4CC9F0' };
     obstaclesRef.current = [];
     collectiblesRef.current = [];
+    heartsSinceLastBeeRef.current = 0;
+    nextBeeThresholdRef.current = Math.floor(Math.random() * 5) + 5;
     setGameState(GameState.PLAYING);
     setReadyForNextLevel(false); // 重置下一关准备状态
   };
@@ -55,7 +61,8 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
       if (e.code === 'Space' || e.code === 'ArrowUp') {
         e.preventDefault();
         if (gameState === GameState.PLAYING) jump();
-        if (gameState === GameState.IDLE || gameState === GameState.GAME_OVER) initGame();
+        // 仅在初始状态且未准备好下一关时允许通过按键开始
+        if (gameState === GameState.IDLE && !readyForNextLevel) initGame();
       }
     };
     
@@ -66,9 +73,10 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
          return; // 允许按钮的点击事件正常触发
        }
        
-       e.preventDefault(); 
+       e.preventDefault();
        if (gameState === GameState.PLAYING) jump();
-       if (gameState === GameState.IDLE || gameState === GameState.GAME_OVER) initGame();
+       // 仅在初始状态且未准备好下一关时允许通过点击开始
+       if (gameState === GameState.IDLE && !readyForNextLevel) initGame();
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -77,7 +85,7 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
         window.removeEventListener('keydown', handleKeyDown);
         window.removeEventListener('touchstart', handleTouch);
     }
-  }, [gameState]);
+  }, [gameState, readyForNextLevel]);
 
   useEffect(() => {
     if (gameState !== GameState.PLAYING) {
@@ -123,24 +131,49 @@ const MiniGame: React.FC<MiniGameProps> = ({ onWin, onClose }) => {
         player.grounded = true;
       }
 
-      // Spawn Obstacles (Bees from the tree level)
-      if (frameCount % 90 === 0) {
-        obstacles.push({
-          x: canvas.width,
-          y: canvas.height - 20 - (Math.random() * 40 + 30), 
-          w: 30,
-          h: 30,
-          type: 'bee'
-        });
-      }
-
-      // Spawn Collectibles (Dr. Hakim's Pages)
+      // Spawn Collectibles (Hearts) & Obstacles (Bees)
+      // 蜜蜂生成逻辑修改：随机出现在 5-9 个爱心之后
       if (frameCount % 15 === 0) {
+        // 生成爱心
         collectibles.push({
           x: canvas.width,
-          y: canvas.height - 50 - (Math.random() * 100), 
+          y: canvas.height - 50 - (Math.random() * 100),
           collected: false
         });
+
+        // 检查是否需要生成蜜蜂
+        heartsSinceLastBeeRef.current += 1;
+        if (heartsSinceLastBeeRef.current >= nextBeeThresholdRef.current) {
+          // 重置计数器和阈值
+          heartsSinceLastBeeRef.current = 0;
+          nextBeeThresholdRef.current = Math.floor(Math.random() * 3) + 4;
+
+          // 决定蜜蜂的高度类型
+          // 50%概率生成低位蜜蜂（需要跳跃），50%概率生成高位蜜蜂（可以钻过去）
+          const isHighBee = Math.random() > 0.9;
+          
+          let beeY;
+          if (isHighBee) {
+             // 高位蜜蜂：位于头部上方，不需要跳跃即可通过
+             // 玩家高度40，地面y = canvas.height - 20
+             // 玩家头部 y = canvas.height - 60
+             // 蜜蜂高度30
+             // 蜜蜂底部 < 玩家头部 => beeY + 30 < canvas.height - 60 => beeY < canvas.height - 90
+             // 设置在 canvas.height - 130 到 canvas.height - 100 之间
+             beeY = canvas.height - 20 - (Math.random() * 30 + 80);
+          } else {
+             // 低位蜜蜂：原有逻辑，需要跳跃
+             beeY = canvas.height - 20 - (Math.random() * 40 + 30);
+          }
+
+          obstacles.push({
+            x: canvas.width + 40, // 稍微错开一点，避免和爱心完全重叠
+            y: beeY,
+            w: 30,
+            h: 30,
+            type: 'bee'
+          });
+        }
       }
 
       // Update & Draw Obstacles
