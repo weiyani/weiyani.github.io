@@ -10,7 +10,7 @@ export enum DecorationType {
   INTERACTIVE = 'INTERACTIVE'
 }
 
-export type BookColor = 'red' | 'blue' | 'green' | 'purple';
+export type BookColor = 'red' | 'blue' | 'green' | 'purple' | 'yellow' | 'orange';
 
 export interface Decoration {
   id: string;
@@ -19,7 +19,7 @@ export interface Decoration {
   type: DecorationType;
   emoji: string;
   bookColor?: BookColor; // 爱之书的颜色
-  action?: 'photo' | 'letter' | 'game' | 'music'; // 对应的动作
+  action?: 'photo' | 'letter' | 'game' | 'music' | 'bellGame' | 'matchGame'; // 对应的动作
 }
 
 export enum GameState {

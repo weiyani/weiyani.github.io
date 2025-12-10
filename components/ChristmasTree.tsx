@@ -3,15 +3,17 @@ import { Decoration, DecorationType, BookColor } from '../types';
 import { Book, Image, Mail, Gamepad2, CheckCircle2 } from 'lucide-react';
 
 interface TreeProps {
-  onInteraction: (type: 'photo' | 'music' | 'letter' | 'game') => void;
+  onInteraction: (type: 'photo' | 'music' | 'letter' | 'game' | 'bellGame' | 'matchGame') => void;
 }
 
 // 爱之书配置：每种颜色对应固定功能
 const BOOK_CONFIG = [
-  { color: 'red' as BookColor, emoji: '📕', action: 'letter' as const, name: '神秘人的信' },
+  { color: 'red' as BookColor, emoji: '📕', action: 'letter' as const, name: '圣诞老公的信' },
   { color: 'blue' as BookColor, emoji: '📘', action: 'photo' as const, name: '幸福瞬间' },
   { color: 'green' as BookColor, emoji: '📗', action: 'game' as const, name: '为爱奔跑' },
   { color: 'purple' as BookColor, emoji: '📙', action: 'music' as const, name: '私奔到月球' },
+  { color: 'yellow' as BookColor, emoji: '📒', action: 'bellGame' as const, name: '寻找圣诞老人' },
+  { color: 'orange' as BookColor, emoji: '📚', action: 'matchGame' as const, name: '圣诞连连看' },
 ];
 
 const ChristmasTree: React.FC<TreeProps> = ({ onInteraction }) => {

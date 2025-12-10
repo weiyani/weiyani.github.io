@@ -4,6 +4,8 @@ import Countdown from './components/Countdown';
 import ChristmasTree from './components/ChristmasTree';
 import MusicPlayer from './components/MusicPlayer';
 import MiniGame from './components/MiniGame';
+import BellGame from './components/BellGame';
+import ChristmasMatch from './components/ChristmasMatch';
 import Fireworks from './components/Fireworks';
 import MusicCountdown from './components/MusicCountdown';
 import { PHOTOS, LOVE_LETTER } from './constants';
@@ -57,7 +59,7 @@ const PhotoCarousel = () => {
 };
 
 const App: React.FC = () => {
-  const [activeModal, setActiveModal] = useState<'photo' | 'letter' | 'game' | null>(null);
+  const [activeModal, setActiveModal] = useState<'photo' | 'letter' | 'game' | 'bellGame' | 'matchGame' | null>(null);
   const [showFireworks, setShowFireworks] = useState(false);
   const [showMusicPlayer, setShowMusicPlayer] = useState(false);
   const [currentLyric, setCurrentLyric] = useState('');
@@ -65,7 +67,7 @@ const App: React.FC = () => {
   const [showMusicCountdown, setShowMusicCountdown] = useState(false);
   const [hasPlayedMusic, setHasPlayedMusic] = useState(false); // 记录是否已经播放过
 
-  const handleTreeInteraction = (type: 'photo' | 'music' | 'letter' | 'game') => {
+  const handleTreeInteraction = (type: 'photo' | 'music' | 'letter' | 'game' | 'bellGame' | 'matchGame') => {
     // 点击音乐书时
     if (type === 'music') {
       if (!hasPlayedMusic) {
@@ -168,7 +170,7 @@ const App: React.FC = () => {
       )}
 
       {activeModal === 'letter' && (
-        <Modal onClose={() => setActiveModal(null)} title="来自神秘人的信">
+        <Modal onClose={() => setActiveModal(null)} title="来自圣诞老公的信">
           <div className="font-chinese text-sm md:text-lg text-gray-700 whitespace-pre-line leading-relaxed p-4 md:p-6 bg-[#FFF8E1] rounded-lg md:rounded-xl border-l-4 border-game-book shadow-inner relative overflow-hidden">
             <div className="absolute top-0 right-0 p-2 md:p-4 opacity-10">
                <Gamepad size={60} className="md:hidden" />
@@ -186,6 +188,18 @@ const App: React.FC = () => {
             // 只触发烟花，不关闭游戏窗口（让玩家可以点击进入LV4）
             setShowFireworks(true);
           }} 
+        />
+      )}
+
+      {activeModal === 'bellGame' && (
+        <BellGame 
+          onClose={() => setActiveModal(null)} 
+        />
+      )}
+
+      {activeModal === 'matchGame' && (
+        <ChristmasMatch 
+          onClose={() => setActiveModal(null)} 
         />
       )}
     </div>
