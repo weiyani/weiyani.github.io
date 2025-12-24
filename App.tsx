@@ -8,7 +8,7 @@ import BellGame from './components/BellGame';
 import ChristmasMatch from './components/ChristmasMatch';
 import Fireworks from './components/Fireworks';
 import MusicCountdown from './components/MusicCountdown';
-import { PHOTOS, LOVE_LETTER, getPhotos } from './constants';
+import { PHOTOS, LOVE_LETTER, getPhotos, getAnniversaryYearsText } from './constants';
 import { X, ChevronLeft, ChevronRight, Gamepad, Heart } from 'lucide-react';
 
 // Simple Modals - 移动端优化
@@ -196,7 +196,7 @@ const App: React.FC = () => {
               <div className="mt-2 md:mt-4 flex items-center gap-2 md:gap-3 bg-white/60 backdrop-blur px-3 md:px-6 py-1.5 md:py-2 rounded-full border-2 border-white shadow-sm">
                  <Gamepad className="text-game-blue w-4 h-4 md:w-6 md:h-6" />
                  <p className="text-sm md:text-xl font-chinese font-bold text-gray-600">
-                   五周年 · 爱的冒险篇
+                   {getAnniversaryYearsText()} · 爱的冒险篇
                  </p>
                  <Heart className="text-red-500 fill-red-500 animate-pulse w-4 h-4 md:w-5 md:h-5" />
               </div>

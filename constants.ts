@@ -1,6 +1,62 @@
 // CONFIGURATION: Change these dates for your specific anniversary
 // Format: YYYY-MM-DD
-export const WEDDING_DATE = '2020-12-25'; 
+export const WEDDING_DATE = '2020-12-25';
+
+// 计算周年数的函数
+export const getAnniversaryYears = (): number => {
+  const dateParts = WEDDING_DATE.split('-');
+  const weddingYear = parseInt(dateParts[0]);
+  const weddingMonth = parseInt(dateParts[1]) - 1; // Month is 0-indexed in JS
+  const weddingDay = parseInt(dateParts[2]);
+  
+  // Beijing Time Offset (UTC+8) in milliseconds
+  const BEIJING_OFFSET = 8 * 60 * 60 * 1000;
+  
+  const now = new Date();
+  const nowUtc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  const nowBeijingTimestamp = nowUtc + BEIJING_OFFSET;
+  
+  // 获取当前北京时间的年份
+  const currentYearInBeijing = new Date(nowBeijingTimestamp).getUTCFullYear();
+  
+  // 获取今年纪念日的北京时间戳
+  const thisYearAnniversary = Date.UTC(currentYearInBeijing, weddingMonth, weddingDay, 0, 0, 0) - BEIJING_OFFSET;
+  
+  // 计算距离今年纪念日的天数
+  const daysToAnniversary = Math.ceil((thisYearAnniversary - now.getTime()) / (1000 * 60 * 60 * 24));
+  
+  // 基础周年数
+  let years = currentYearInBeijing - weddingYear;
+  
+  if (daysToAnniversary > 0) {
+    // 还没到今年的纪念日
+    if (daysToAnniversary <= 3) {
+      // 临近3天内，显示为即将到来的周年
+      return years;
+    } else {
+      // 超过3天，显示为上一个已完成的周年
+      return years - 1;
+    }
+  } else if (daysToAnniversary === 0) {
+    // 纪念日当天，显示当前周年
+    return years;
+  } else {
+    // 已经过了今年的纪念日，正在进行下一个周年，显示当前进行中的周年数
+    return years + 1;
+  }
+};
+
+// 获取周年数的中文表示
+export const getAnniversaryYearsText = (): string => {
+  const years = getAnniversaryYears();
+  const chineseNumbers = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+  
+  if (years < 10) {
+    return chineseNumbers[years] + '周年';
+  } else {
+    return years + '周年';
+  }
+};
 
 export const DEFAULT_SONGS = [
   {
@@ -13,15 +69,15 @@ export const DEFAULT_SONGS = [
 export const LOVE_LETTER = `
 亲爱的老婆：
 
-在这白雪皑皑的圣诞节，也是我们五周年的纪念日。
-回首这五年，每一个有你的日子，都是我生命中最珍贵的礼物。
-
-感谢你成为我的伴侣，以及我冬日里最温暖的阳光。
-未来的日子里，愿我们依然手牵手，共度每一个春夏秋冬。
+在这白雪皑皑的圣诞节，也是我们${getAnniversaryYearsText()}的纪念日。
+在这个值得纪念的日子，特意写了小网站，供你消遣。
+如果通关记得截图保存发给我，凭截图有神秘大奖等着你。
+最后，感谢你成为我的伴侣,未来的日子里，希望我们相濡以沫，
+相互包容，身体健康，开开心心的度过每一个春夏秋冬。
 
 圣诞&纪念日快乐！
 
-永远爱你的老公
+爱你的老公
 `;
 
 // 动态获取 public/Image 文件夹下的所有图片

@@ -41,18 +41,26 @@ const Countdown: React.FC = () => {
       let targetTimestamp = getBeijingAnniversaryTime(currentYearInBeijing);
       let targetAnniversaryYear = currentYearInBeijing;
 
-      // If we have already passed the anniversary in Beijing time, target next year
-      if (now.getTime() > targetTimestamp) {
+      // 计算距离今年纪念日的天数
+      const daysToAnniversary = Math.ceil((targetTimestamp - now.getTime()) / (1000 * 60 * 60 * 24));
+      
+      // 检查是否是纪念日当天
+      const isAnniversaryDay = daysToAnniversary === 0 && Math.abs(targetTimestamp - now.getTime()) < 24 * 60 * 60 * 1000;
+      
+      if (isAnniversaryDay) {
+        // 纪念日当天，倒计时归零且不再增长
+        const yearsTogether = currentYearInBeijing - weddingYear;
+        setAnniversaryYear(yearsTogether);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      } else if (now.getTime() > targetTimestamp) {
+        // 已经过了今年的纪念日，目标设为明年
         targetAnniversaryYear = currentYearInBeijing + 1;
         targetTimestamp = getBeijingAnniversaryTime(targetAnniversaryYear);
-      }
-
-      const yearsTogether = targetAnniversaryYear - weddingYear;
-      setAnniversaryYear(yearsTogether);
-
-      const difference = targetTimestamp - now.getTime();
-
-      if (difference > 0) {
+        
+        const yearsTogether = targetAnniversaryYear - weddingYear;
+        setAnniversaryYear(yearsTogether);
+        
+        const difference = targetTimestamp - now.getTime();
         setTimeLeft({
           days: Math.floor(difference / (1000 * 60 * 60 * 24)),
           hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
@@ -60,7 +68,21 @@ const Countdown: React.FC = () => {
           seconds: Math.floor((difference / 1000) % 60),
         });
       } else {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        // 还没到今年的纪念日
+        const yearsTogether = targetAnniversaryYear - weddingYear;
+        setAnniversaryYear(yearsTogether);
+        
+        const difference = targetTimestamp - now.getTime();
+        if (difference > 0) {
+          setTimeLeft({
+            days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+            minutes: Math.floor((difference / 1000 / 60) % 60),
+            seconds: Math.floor((difference / 1000) % 60),
+          });
+        } else {
+          setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        }
       }
     };
 
