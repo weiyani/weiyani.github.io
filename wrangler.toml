@@ -1,0 +1,13 @@
+name = "anniversary-site"
+
+[vars]
+NODE_VERSION = "20"
+
+[build]
+command = "npm run build"
+dir = "dist"
+
+[[headers]]
+for = "/*"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"

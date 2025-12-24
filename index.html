@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="https://lucide.dev/icons/heart-handshake.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="theme-color" content="#fbc2eb" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>我们的双人成行 - 5周年纪念</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carter+One&family=Fredoka+One&family=Noto+Serif+SC:wght@400;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              logo: ['"Carter One"', 'cursive'], // Cartoonish bold font for headers
+              display: ['"Fredoka One"', 'cursive'],
+              chinese: ['"Noto Serif SC"', 'serif'],
+              sans: ['"Nunito"', 'sans-serif'],
+            },
+            colors: {
+              game: {
+                orange: '#FF9F1C', // Logo orange
+                yellow: '#FFBF00', // Logo yellow
+                blue: '#2EC4B6',   // Sky/May blue
+                green: '#4CC9F0',  // Magic blue/green
+                cody: '#70C1B3',   // Cody green/teal
+                may: '#5F5AA2',    // May purple/blue
+                book: '#E71D36',   // Dr. Hakim Red
+                pink: '#FF99C8',   // Added Pink for warmth
+              },
+              christmas: {
+                red: '#D42426',
+                green: '#165B33',
+                gold: '#B45309',
+              }
+            },
+            animation: {
+              'float': 'float 4s ease-in-out infinite',
+              'float-delayed': 'float 4s ease-in-out 2s infinite',
+              'float-random': 'floatRandom 6s ease-in-out infinite',
+              'bounce-slow': 'bounce 2s infinite',
+              'spin-slow': 'spin 3s linear infinite',
+              'fade-in': 'fadeIn 0.6s ease-in-out',
+              'fade-in-down': 'fadeInDown 0.8s ease-out',
+              'fade-in-up': 'fadeInUp 0.8s ease-out',
+              'fade-out': 'fadeOut 0.5s ease-out forwards',
+              'scale-up': 'scaleUp 0.5s ease-out',
+              'scale-pulse': 'scalePulse 1s ease-in-out infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                '50%': { transform: 'translateY(-10px) rotate(2deg)' },
+              },
+              floatRandom: {
+                '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+                '25%': { transform: 'translate(20px, -20px) scale(1.1)' },
+                '50%': { transform: 'translate(-15px, -40px) scale(0.9)' },
+                '75%': { transform: 'translate(-20px, -20px) scale(1.05)' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              fadeInDown: {
+                '0%': { opacity: '0', transform: 'translateY(-20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              fadeOut: {
+                '0%': { opacity: '1' },
+                '100%': { opacity: '0' },
+              },
+              scaleUp: {
+                '0%': { transform: 'scale(0.8)', opacity: '0' },
+                '100%': { transform: 'scale(1)', opacity: '1' },
+              },
+              scalePulse: {
+                '0%, 100%': { transform: 'scale(1)' },
+                '50%': { transform: 'scale(1.05)' },
+              },
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        /* Warmer Gradient: Pink to Soft Blue (Magic Hour / Sunset feel) */
+        background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+        color: #2D3436;
+        overflow-x: hidden;
+        min-height: 100vh;
+        /* 移动端优化 */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        touch-action: manipulation;
+      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #fbc2eb;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #FF9F1C;
+        border-radius: 5px;
+        border: 2px solid #fff;
+      }
+      /* 移动端点击高亮去除 */
+      * {
+        -webkit-tap-highlight-color: transparent;
+      }
+      /* 延迟动画 */
+      .animation-delay-300 {
+        animation-delay: 0.3s;
+      }
+      .animation-delay-500 {
+        animation-delay: 0.5s;
+      }
+      .animation-delay-700 {
+        animation-delay: 0.7s;
+      }
+      .animation-delay-1000 {
+        animation-delay: 1s;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

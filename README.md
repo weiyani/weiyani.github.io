@@ -1,0 +1,94 @@
+# 五周年纪念网站
+
+这是一个为五周年纪念日制作的互动网站，包含倒计时、圣诞树装饰游戏、音乐播放等功能。
+
+## 功能特色
+
+- 🎄 圣诞节主题界面
+- ⏰ 周年纪念倒计时
+- 🎮 互动小游戏
+- 🎵 背景音乐播放
+- 📸 照片回忆墙
+- 💌 情书展示
+
+## 技术栈
+
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- Lucide React Icons
+
+## 开发指南
+
+### 本地开发
+
+```bash
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+
+# 构建生产版本
+npm run build
+
+# 预览生产版本
+npm run preview
+```
+
+## 部署
+
+### GitHub Pages 部署
+
+项目已配置 GitHub Actions，推送到 master 分支会自动部署到 GitHub Pages。
+
+### CloudBase 静态托管部署
+
+1. 在 GitHub 仓库的 Settings > Secrets 中添加以下 secrets：
+   - `SECRET_ID`: 你的腾讯云 SecretId
+   - `SECRET_KEY`: 你的腾讯云 SecretKey
+   - `ENV_ID`: 你的 CloudBase 环境 ID
+
+2. 推送代码到 master 分支，GitHub Actions 会自动部署到 CloudBase。
+
+### Cloudflare Pages 部署
+
+1. 访问 [Cloudflare Pages Dashboard](https://dash.cloudflare.com/?account-pages=%7B%22id%22:%22new%22%7D)
+2. 连接你的 GitHub 账户并选择此仓库
+3. 配置构建设置：
+   - Production branch: `master`
+   - Build command: `npm run build`
+   - Build output directory: `dist`
+4. 点击 "Save and Deploy"
+
+> 注意：如果在 Cloudflare Pages 界面中没有看到 Framework preset 选项，请直接手动填写 Build command 和 Build output directory。
+
+详细部署说明请查看 [DEPLOYMENT.md](./DEPLOYMENT.md) 文件。
+
+## 项目结构
+
+```
+.
+├── components/          # React 组件
+├── public/              # 静态资源
+├── App.tsx             # 主应用组件
+├── index.html          # HTML 模板
+├── index.tsx           # 应用入口
+├── constants.ts         # 常量定义
+├── types.ts            # TypeScript 类型定义
+├── vite.config.ts      # Vite 配置
+└── cloudbaserc.json    # CloudBase 配置
+```
+
+## 自定义
+
+你可以通过修改以下文件来自定义网站内容：
+
+- `constants.ts`: 修改纪念日期、照片等
+- `public/`: 替换图片和音频文件
+- `components/`: 修改各功能组件
+
+## 许可证
+
+MIT License
